@@ -252,6 +252,7 @@ if(btn.dataset.view==='transactions')renderTransactions();
 
 // --- MODALS ---
 function openModal(type,editTx){
+if(typeof editTx==='string')try{editTx=JSON.parse(editTx);}catch(e){}
 document.getElementById('modal-overlay').classList.remove('hidden');
 document.getElementById('edit-id').value=editTx?editTx.id:'';
 document.getElementById('tx-type').value=type||'buy';
@@ -458,7 +459,7 @@ html+='<tr><td>'+t.date+'</td>'
 +'<td class="text-right">'+fmt(total)+'</td>'
 +'<td class="text-muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(t.notes||'—')+'</td>'
 +'<td><div class="edit-btns">'
-+'<button class="edit-btn" onclick="openModal(\''+t.type+'\','+JSON.stringify(t)+')" title="Redaguoti">✏️</button>'
++'<button class="edit-btn" onclick="openModal(\''+t.type+'\','+JSON.stringify(t).replace(/"/g,'&quot;')+')" title="Redaguoti">✏️</button>'
 +'<button class="del-btn" onclick="deleteTx(\''+t.id+'\')" title="Ištrinti">🗑️</button>'
 +'</div></td></tr>';
 });
