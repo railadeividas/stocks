@@ -3,567 +3,1448 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Akcijų Portfelis 📈</title>
+<title>Akcijų portfelis</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--radius:8px;--shadow:0 1px 3px rgba(0,0,0,.3)}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.container{max-width:1100px;margin:0 auto;padding:16px}
-header{background:var(--card);border-bottom:1px solid var(--border);padding:12px 0;position:sticky;top:0;z-index:100}
-header .container{display:flex;align-items:center;justify-content:space-between;padding:0 16px}
-header h1{font-size:20px;font-weight:600}
-header h1 span{color:var(--accent)}
-header nav{display:flex;gap:4px}
-header nav button{background:none;border:none;color:var(--muted);padding:6px 14px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-weight:500;transition:.2s}
-header nav button:hover{color:var(--text);background:rgba(255,255,255,.05)}
-header nav button.active{color:var(--accent);background:rgba(88,166,255,.12)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
-.card h2{font-size:16px;font-weight:600;margin-bottom:16px;color:var(--text)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
-.stat .val{font-size:24px;font-weight:700;margin-top:4px}
-.stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-.stat .val.green{color:var(--green)}
-.stat .val.red{color:var(--red)}
-.stat .val.accent{color:var(--accent)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead{background:rgba(255,255,255,.03)}
-th{padding:10px 12px;text-align:left;color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
-td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
-tr:hover td{background:rgba(255,255,255,.02)}
-form{display:grid;gap:12px}
-.form-row{display:grid;gap:6px}
-.form-row label{font-size:12px;color:var(--muted);font-weight:500}
-input,select,textarea{padding:8px 12px;background:#0d1117;border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;outline:none;transition:.15s}
-input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(88,166,255,.15)}
-textarea{resize:vertical;min-height:60px;font-family:inherit}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;transition:.2s;text-decoration:none}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:#4a90d9}
-.btn-danger{background:var(--red);color:#fff}
-.btn-danger:hover{background:#d93a3a}
-.btn-success{background:var(--green);color:#fff}
-.btn-success:hover{background:#2ea043}
-.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
-.btn-ghost:hover{color:var(--text);border-color:var(--text)}
-.btn-sm{padding:4px 10px;font-size:11px}
-.flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.flex-between{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.hidden{display:none !important}
-.badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-.badge-buy{background:rgba(63,185,80,.15);color:var(--green)}
-.badge-sell{background:rgba(248,81,73,.15);color:var(--red)}
-.text-green{color:var(--green)}
-.text-red{color:var(--red)}
-.text-muted{color:var(--muted)}
-.text-right{text-align:right}
-.mt-12{margin-top:12px}
-.mb-12{margin-bottom:12px}
-.gap-12{gap:12px}
-.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
-.empty-state p{font-size:14px;margin-bottom:12px}
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
-.modal h2{font-size:18px;margin-bottom:16px}
-.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:640px){.form-2col{grid-template-columns:1fr}}
-.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
-.progress-fill{height:100%;border-radius:2px;transition:width .4s}
-canvas{max-width:100%;height:auto!important}
-.symbol-badge{display:inline-block;background:rgba(88,166,255,.1);color:var(--accent);padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;font-family:monospace}
-.toast{position:fixed;bottom:24px;right:24px;z-index:300;padding:12px 20px;border-radius:8px;color:#fff;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.4);animation:slideIn .3s;max-width:360px}
-.toast.success{background:var(--green)}
-.toast.error{background:var(--red)}
-.toast.info{background:var(--accent)}
-@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)}
-.tabs button{padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;font-size:13px;transition:.2s}
-.tabs button:hover{color:var(--text)}
-.tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
-.edit-btns{display:flex;gap:4px}
-.edit-btns button{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:4px;font-size:14px;transition:.2s;line-height:1}
-.edit-btns button:hover{background:rgba(255,255,255,.08)}
-.edit-btns .edit-btn:hover{color:var(--accent)}
-.edit-btns .del-btn:hover{color:var(--red)}
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel-2: #273449;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --green: #22c55e;
+    --red: #ef4444;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+  }
+  header h1 { margin: 0; font-size: 20px; }
+  header h1 span { color: var(--accent); }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: background .15s, border-color .15s;
+  }
+  button:hover { background: #334155; }
+  button.primary { background: var(--accent); color: #0b1220; border-color: var(--accent); font-weight: 600; }
+  button.primary:hover { background: #7dd3fc; }
+  button.danger { color: var(--red); border-color: #7f1d1d; }
+  button.danger:hover { background: #7f1d1d; color: #fff; }
+  button.icon { padding: 4px 8px; font-size: 13px; }
+
+  /* Summary cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .card .label { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
+  .card .value { font-size: 26px; font-weight: 700; }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+
+  section h2 {
+    font-size: 18px; margin: 44px 0 16px; color: var(--text);
+    text-transform: uppercase; letter-spacing: .06em; font-weight: 700;
+    border-left: 3px solid var(--accent); padding-left: 10px; line-height: 1.2;
+  }
+  .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 44px 0 16px; }
+  .section-head h2 { margin: 0; }
+  .watch-add { display: flex; gap: 8px; }
+  .watch-add input { width: 200px; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: var(--radius); overflow: hidden; }
+  th, td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--panel-2); }
+  .sym { font-weight: 700; color: var(--accent); }
+  .empty { text-align: center; color: var(--muted); padding: 32px; }
+  .muted-cell { color: var(--muted); font-style: italic; }
+  .quotes-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .quotes-bar .spacer { flex: 1; }
+  .last-updated { color: var(--muted); font-size: 13px; }
+  .chart-pick { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+  button[disabled] { opacity: .6; cursor: progress; }
+  .chart-box { position: relative; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; min-height: 120px; }
+  .chart-box .chart-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+  .chart-box .chart-title { font-weight: 700; color: var(--accent); font-size: 16px; }
+  .chart-box .chart-price { font-size: 20px; font-weight: 700; }
+  .chart-box svg { width: 100%; height: auto; display: block; }
+  .chart-box .axis { fill: var(--muted); font-size: 11px; }
+  .chart-box .chart-hit { cursor: crosshair; }
+  .chart-box .crosshair { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; opacity: 0; pointer-events: none; vector-effect: non-scaling-stroke; }
+  .chart-box .cursor-dot { opacity: 0; pointer-events: none; stroke: var(--panel); stroke-width: 2; }
+  .chart-box svg.hovering .crosshair, .chart-box svg.hovering .cursor-dot { opacity: 1; }
+  .chart-tip {
+    position: absolute; pointer-events: none; opacity: 0; transition: opacity .1s;
+    transform: translate(-50%, -140%); z-index: 5;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 5px 9px; font-size: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    display: flex; flex-direction: column; gap: 1px; align-items: center;
+  }
+  .chart-tip.show { opacity: 1; }
+  .chart-tip .tip-price { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .chart-tip .tip-time { color: var(--muted); font-size: 11px; }
+  .price-cell { white-space: nowrap; }
+  .price-cell .icon { margin-left: 6px; padding: 4px 7px; }
+  .price-input { width: 90px; text-align: right; padding: 5px 8px; }
+  .cur-suffix { color: var(--muted); font-size: 12px; margin-left: 4px; }
+  .cur-tag { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 999px; font-size: 10px; font-weight: 700; background: var(--panel-2); color: var(--muted); vertical-align: middle; }
+  #fxSection:empty { display: none; }
+  .fx-input { width: 90px; text-align: right; padding: 5px 8px; }
+  td .price-input { font-variant-numeric: tabular-nums; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .tag.buy { background: rgba(34,197,94,.15); color: var(--green); }
+  .tag.sell { background: rgba(239,68,68,.15); color: var(--red); }
+
+  .filters { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  input, select {
+    font: inherit;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 10px;
+    border-radius: 8px;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; width: 100%; max-width: 420px;
+  }
+  .modal h3 { margin: 0 0 16px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  .field input, .field select { width: 100%; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .label-note { color: var(--muted); font-weight: 400; font-size: 11px; }
+  .modal textarea {
+    width: 100%;
+    min-height: 260px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px;
+    border-radius: 8px;
+    resize: vertical;
+    line-height: 1.5;
+    white-space: pre;
+    margin-top: 8px;
+  }
+  .modal textarea:focus { outline: none; border-color: var(--accent); }
+  .import-error { color: var(--red); font-size: 13px; margin-top: 8px; min-height: 18px; }
+  .checkbox-field {
+    display: flex; align-items: flex-start; gap: 10px; margin-top: 12px;
+    font-size: 13px; color: var(--text); cursor: pointer; user-select: none;
+    padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--panel-2); transition: border-color .15s, background .15s;
+  }
+  .checkbox-field:hover { border-color: var(--accent); }
+  .checkbox-field input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .checkbox-box {
+    flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px;
+    border: 1px solid var(--border); border-radius: 5px; background: var(--bg);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s;
+  }
+  .checkbox-box svg { width: 12px; height: 12px; opacity: 0; transform: scale(.6); transition: opacity .12s, transform .12s; }
+  .checkbox-field input:checked + .checkbox-box { background: var(--accent); border-color: var(--accent); }
+  .checkbox-field input:checked + .checkbox-box svg { opacity: 1; transform: scale(1); }
+  .checkbox-field input:focus-visible + .checkbox-box { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .checkbox-text { line-height: 1.45; }
+  .checkbox-text strong { color: var(--accent); font-weight: 700; }
 </style>
 </head>
 <body>
-
 <header>
-<div class="container">
-<h1><span>📈</span> Akcijų Portfelis</h1>
-<nav>
-<button class="active" data-view="dashboard">🖥 Suvestinė</button>
-<button data-view="transactions">📋 Transakcijos</button>
-<button data-view="export">💾 Eksportas</button>
-</nav>
-</div>
+  <h1>📈 Akcijų <span>portfelis</span></h1>
+  <div class="toolbar">
+    <button class="primary" data-action="add">+ Nauja transakcija</button>
+    <button data-action="export">⬇ Eksportuoti</button>
+    <button data-action="import">⬆ Importuoti</button>
+    <button data-action="report">📝 Ataskaita</button>
+  </div>
 </header>
 
-<div class="container" id="app">
+<main>
+  <div class="cards" id="cards"></div>
 
-<!-- DASHBOARD VIEW -->
-<div id="view-dashboard" class="view">
-<div class="grid" id="stats-grid">
-<div class="stat"><div class="label">Investuota</div><div class="val accent" id="stat-invested">€0.00</div></div>
-<div class="stat"><div class="label">Portfelio vertė</div><div class="val accent" id="stat-value">€0.00</div></div>
-<div class="stat"><div class="label">Pelnas / Nuostolis</div><div class="val" id="stat-pl">€0.00</div></div>
-<div class="stat"><div class="label">Akcijų skaičius</div><div class="val accent" id="stat-holdings">0</div></div>
+  <section>
+    <div class="section-head">
+      <h2>Kainos ir grafikas</h2>
+      <div class="watch-add">
+        <input id="watchAdd" placeholder="Stebėti simbolį (pvz. TSLA)" autocomplete="off">
+        <button data-action="add-watch">+ Pridėti</button>
+      </div>
+    </div>
+    <div class="quotes-bar">
+      <label class="chart-pick">Akcija:
+        <select id="chartSymbol"></select>
+      </label>
+      <button data-action="refresh-chart" id="refreshChartBtn">Atnaujinti grafiką</button>
+      <button data-action="remove-watch" id="removeWatchBtn" style="display:none">Pašalinti iš sąrašo</button>
+      <span class="spacer"></span>
+      <span id="lastUpdated" class="last-updated">Kainos dar neatnaujintos</span>
+    </div>
+    <div id="chart" class="chart-box"></div>
+  </section>
+
+  <section id="fxSection"></section>
+
+  <section>
+    <h2>Turimos pozicijos</h2>
+    <div id="holdings"></div>
+  </section>
+
+  <section id="realized"></section>
+
+  <section>
+    <h2>Transakcijų istorija</h2>
+    <div class="filters">
+      <input type="search" id="search" placeholder="Ieškoti pagal simbolį…">
+      <select id="typeFilter">
+        <option value="">Visi tipai</option>
+        <option value="buy">Pirkimai</option>
+        <option value="sell">Pardavimai</option>
+      </select>
+    </div>
+    <div id="history"></div>
+  </section>
+</main>
+
+<!-- Transaction modal -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle">Nauja transakcija</h3>
+    <form id="txForm">
+      <input type="hidden" id="txId">
+      <div class="field">
+        <label for="txType">Tipas</label>
+        <select id="txType" required>
+          <option value="buy">Pirkimas</option>
+          <option value="sell">Pardavimas</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="txSymbol">Simbolis</label>
+        <input id="txSymbol" placeholder="pvz. AAPL" required autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="txCurrency">Valiuta</label>
+        <select id="txCurrency"></select>
+      </div>
+      <div class="field">
+        <label for="txShares">Kiekis</label>
+        <input id="txShares" class="num-input" type="text" inputmode="decimal" placeholder="0" required autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="txPrice" id="txPriceLabel">Kaina už vienetą (€)</label>
+        <input id="txPrice" class="num-input" type="text" inputmode="decimal" placeholder="0,00" required autocomplete="off">
+      </div>
+      <div class="field" id="txEurField" style="display:none">
+        <label for="txEurAmount" id="txEurLabel">Konvertuota suma (€, be mokesčio)</label>
+        <input id="txEurAmount" class="num-input" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="txFee">Mokestis (€) <span class="label-note">FX mokestis, komisiniai</span></label>
+        <input id="txFee" class="num-input" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+        <div class="hint" id="txFxHint"></div>
+      </div>
+      <div class="field">
+        <label for="txDate">Data</label>
+        <input id="txDate" type="date" required>
+      </div>
+      <div class="field">
+        <label for="txNotes">Pastabos</label>
+        <input id="txNotes" placeholder="nebūtina" autocomplete="off">
+      </div>
+      <div class="modal-actions">
+        <button type="button" data-action="close">Atšaukti</button>
+        <button type="submit" class="primary">Išsaugoti</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<div class="card">
-<div class="flex-between mb-12">
-<h2>📊 Mano akcijos</h2>
-<div class="flex">
-<button class="btn btn-primary btn-sm" onclick="openModal('buy')">+ Pridėti pirkimą</button>
-<button class="btn btn-success btn-sm" onclick="openModal('sell')">+ Pridėti pardavimą</button>
-<button class="btn btn-ghost btn-sm" onclick="refreshPrices()">🔄 Atnaujinti kainas</button>
-</div>
-</div>
-<div id="price-status" class="text-muted" style="font-size:12px;margin-bottom:8px;"></div>
-<div id="holdings-table"><div class="empty-state"><p>📭 Dar nėra jokių transakcijų</p><button class="btn btn-primary btn-sm" onclick="openModal('buy')">Pridėti pirmą pirkimą</button></div></div>
-</div>
-
-<div class="card" id="portfolio-chart-card">
-<h2>📈 Portfelio struktūra</h2>
-<canvas id="portfolio-chart" height="250"></canvas>
-</div>
+<!-- Export modal -->
+<div class="modal-backdrop" id="exportModal">
+  <div class="modal">
+    <h3>Eksportuoti duomenis</h3>
+    <p class="hint">Nukopijuok šį JSON ir išsaugok saugioje vietoje.</p>
+    <textarea id="exportText" readonly spellcheck="false"></textarea>
+    <div class="modal-actions">
+      <button type="button" data-action="close">Uždaryti</button>
+      <button type="button" class="primary" data-action="copy">📋 Kopijuoti</button>
+    </div>
+  </div>
 </div>
 
-<!-- TRANSACTIONS VIEW -->
-<div id="view-transactions" class="view hidden">
-<div class="card">
-<div class="flex-between mb-12">
-<h2>📋 Transakcijų istorija</h2>
-<div class="flex">
-<input type="text" id="tx-search" placeholder="🔍 Ieškoti..." style="width:180px" oninput="renderTransactions()">
-<select id="tx-filter" onchange="renderTransactions()" style="width:120px">
-<option value="all">Visos</option>
-<option value="buy">Pirkimai</option>
-<option value="sell">Pardavimai</option>
-</select>
-</div>
-</div>
-<div id="transactions-list"><div class="empty-state"><p>📭 Nėra transakcijų</p></div></div>
-</div>
+<!-- Report modal -->
+<div class="modal-backdrop" id="reportModal">
+  <div class="modal">
+    <h3>Ataskaita (Markdown)</h3>
+    <p class="hint">Nukopijuok ir įklijuok pvz. į GitHub, Notion ar ataskaitą.</p>
+    <textarea id="reportText" readonly spellcheck="false"></textarea>
+    <div class="modal-actions">
+      <button type="button" data-action="close">Uždaryti</button>
+      <button type="button" class="primary" data-action="copy-report">📋 Kopijuoti</button>
+    </div>
+  </div>
 </div>
 
-<!-- EXPORT VIEW -->
-<div id="view-export" class="view hidden">
-<div class="card">
-<h2>💾 Duomenų eksportas</h2>
-<p class="text-muted" style="font-size:13px;margin-bottom:16px">Atsisiųskite savo duomenis CSV arba JSON formatu. Taip pat galite išvalyti visus duomenis.</p>
-<div class="flex gap-12">
-<button class="btn btn-primary" onclick="exportCSV()">📥 Atsisiųsti CSV</button>
-<button class="btn btn-ghost" onclick="exportJSON()">📥 Atsisiųsti JSON</button>
-<button class="btn btn-danger" onclick="clearAllData()">🗑 Išvalyti visus duomenis</button>
-</div>
-</div>
-<div class="card">
-<h2>ℹ️ Apie</h2>
-<p class="text-muted" style="font-size:13px">Duomenys saugomi tik šioje naršyklėje (localStorage). Kainos atnaujinamos iš Yahoo Finance. Valiutų kursai iš ExchangeRate-API.</p>
-</div>
-</div>
-
-</div>
-
-<!-- MODAL -->
-<div id="modal-overlay" class="modal-overlay hidden" onclick="if(event.target===this)closeModal()">
-<div class="modal" onclick="event.stopPropagation()">
-<h2 id="modal-title">Pridėti pirkimą</h2>
-<form id="modal-form" onsubmit="handleFormSubmit(event)">
-<input type="hidden" id="edit-id">
-<div class="form-2col">
-<div class="form-row">
-<label for="tx-type">Tipas</label>
-<select id="tx-type" onchange="updateModalTitle()">
-<option value="buy">Pirkimas</option>
-<option value="sell">Pardavimas</option>
-</select>
-</div>
-<div class="form-row">
-<label for="tx-symbol">Simbolis (pvz. AAPL)</label>
-<input id="tx-symbol" placeholder="PVZ: AAPL" required pattern="[A-Za-z0-9.]{1,10}">
-</div>
-</div>
-<div class="form-2col">
-<div class="form-row">
-<label for="tx-shares">Kiekis (vnt.)</label>
-<input id="tx-shares" type="number" step="any" min="0.00001" placeholder="10" required>
-</div>
-<div class="form-row">
-<label for="tx-price">Kaina už vnt. (USD)</label>
-<input id="tx-price" type="number" step="any" min="0.00001" placeholder="150.00" required>
-</div>
-</div>
-<div class="form-2col">
-<div class="form-row">
-<label for="tx-date">Data</label>
-<input id="tx-date" type="date" required>
-</div>
-<div class="form-row">
-<label for="tx-currency">Valiuta</label>
-<select id="tx-currency">
-<option value="USD">USD</option>
-<option value="EUR">EUR</option>
-</select>
-</div>
-</div>
-<div class="form-row">
-<label for="tx-notes">Pastabos</label>
-<textarea id="tx-notes" placeholder="Neprivaloma..."></textarea>
-</div>
-<div class="flex flex-between mt-12">
-<button type="button" class="btn btn-ghost" onclick="closeModal()">Atšaukti</button>
-<button type="submit" class="btn btn-primary" id="modal-submit">💾 Išsaugoti</button>
-</div>
-</form>
-</div>
+<!-- Import modal -->
+<div class="modal-backdrop" id="importModal">
+  <div class="modal">
+    <h3>Importuoti duomenis</h3>
+    <p class="hint">Įklijuok anksčiau eksportuotą JSON ir spausk „Importuoti".</p>
+    <textarea id="importText" spellcheck="false" placeholder='[ { "symbol": "AAPL", "type": "buy", "shares": 10, "price": 150, "date": "2024-01-01" } ]'></textarea>
+    <label class="checkbox-field">
+      <input type="checkbox" id="importOverride">
+      <span class="checkbox-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0b1220" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>
+      </span>
+      <span class="checkbox-text"><strong>Perrašyti viską (override)</strong> — ištrinti esamus duomenis ir palikti tik importuotus</span>
+    </label>
+    <div id="importError" class="import-error"></div>
+    <div class="modal-actions">
+      <button type="button" data-action="close">Atšaukti</button>
+      <button type="button" class="primary" data-action="do-import">Importuoti</button>
+    </div>
+  </div>
 </div>
 
 <script>
-const STORAGE_KEY = 'stocks_portfolio_tx';
-let transactions = [];
-let pricesCache = {};
-let eurUsdRate = null;
+(function () {
+  "use strict";
 
-function loadData(){
-try{
-const d=localStorage.getItem(STORAGE_KEY);
-transactions=d?JSON.parse(d):[];
-}catch(e){transactions=[]}
-}
-function saveData(){
-localStorage.setItem(STORAGE_KEY,JSON.stringify(transactions));
-}
-loadData();
+  const DB_NAME = "stocks_portfolio";
+  const DB_VERSION = 1;
+  const TX_STORE = "transactions";
+  const STORAGE_KEY = "stocks_portfolio_v1"; // legacy localStorage key (migrated on first load)
+  const PRICES_KEY = "stocks_prices_v1";     // prices still in localStorage; planned for IndexedDB next update
+  const $ = (sel) => document.querySelector(sel);
 
-// --- NAV ---
-document.querySelectorAll('header nav button').forEach(btn=>{
-btn.addEventListener('click',()=>{
-document.querySelectorAll('header nav button').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
-document.getElementById('view-'+btn.dataset.view).classList.remove('hidden');
-if(btn.dataset.view==='dashboard')renderDashboard();
-if(btn.dataset.view==='transactions')renderTransactions();
-});
-});
+  // ---------- State ----------
+  // `transactions` is the in-memory source of truth for rendering/calculations;
+  // IndexedDB is the persistent backing store, kept in sync on every mutation.
+  let db = null;
+  let transactions = [];
+  let prices = loadPrices(); // symbol -> current market price
 
-// --- MODALS ---
-function openModal(type,editTx){
-if(typeof editTx==='string')try{editTx=JSON.parse(editTx);}catch(e){}
-document.getElementById('modal-overlay').classList.remove('hidden');
-document.getElementById('edit-id').value=editTx?editTx.id:'';
-document.getElementById('tx-type').value=type||'buy';
-document.getElementById('tx-symbol').value=editTx?editTx.symbol:'';
-document.getElementById('tx-shares').value=editTx?editTx.shares:'';
-document.getElementById('tx-price').value=editTx?editTx.price:'';
-document.getElementById('tx-date').value=editTx?editTx.date:new Date().toISOString().slice(0,10);
-document.getElementById('tx-currency').value=editTx?editTx.currency||'USD':'USD';
-document.getElementById('tx-notes').value=editTx?editTx.notes||'':'';
-document.getElementById('modal-submit').textContent=editTx?'💾 Atnaujinti':'💾 Išsaugoti';
-updateModalTitle();
-}
-function closeModal(){
-document.getElementById('modal-overlay').classList.add('hidden');
-}
-function updateModalTitle(){
-const type=document.getElementById('tx-type').value;
-const editId=document.getElementById('edit-id').value;
-const prefix=editId?'Redaguoti':'Pridėti';
-document.getElementById('modal-title').textContent=prefix+' '+(type==='buy'?'pirkimą':'pardavimą');
-}
+  // ---------- IndexedDB ----------
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      if (!("indexedDB" in window)) { reject(new Error("IndexedDB nepalaikoma")); return; }
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e) => {
+        const d = e.target.result;
+        if (!d.objectStoreNames.contains(TX_STORE)) {
+          d.createObjectStore(TX_STORE, { keyPath: "id" });
+        }
+        // Next update: add a "prices" object store here (with a DB_VERSION bump).
+      };
+      req.onsuccess = (e) => resolve(e.target.result);
+      req.onerror = (e) => reject(e.target.error);
+    });
+  }
 
-function handleFormSubmit(e){
-e.preventDefault();
-const id=document.getElementById('edit-id').value;
-const type=document.getElementById('tx-type').value;
-const symbol=document.getElementById('tx-symbol').value.toUpperCase().trim();
-const shares=parseFloat(document.getElementById('tx-shares').value);
-const price=parseFloat(document.getElementById('tx-price').value);
-const date=document.getElementById('tx-date').value;
-const currency=document.getElementById('tx-currency').value;
-const notes=document.getElementById('tx-notes').value.trim();
+  function dbGetAll() {
+    return new Promise((resolve, reject) => {
+      const req = db.transaction(TX_STORE, "readonly").objectStore(TX_STORE).getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => reject(req.error);
+    });
+  }
 
-if(id){
-const idx=transactions.findIndex(t=>t.id===id);
-if(idx>=0)transactions[idx]={...transactions[idx],type,symbol,shares,price,date,currency,notes};
-} else {
-transactions.push({ id:crypto.randomUUID(), type, symbol, shares, price, date, currency, notes, createdAt:new Date().toISOString() });
-}
-saveData();
-closeModal();
-showToast(id?'Transakcija atnaujinta!':'Transakcija pridėta!','success');
-renderDashboard();
-renderTransactions();
-}
+  // Persist the whole in-memory array atomically (clear + bulk put). Data is small, so this is simple and safe.
+  function save() {
+    if (!db) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const t = db.transaction(TX_STORE, "readwrite");
+      const store = t.objectStore(TX_STORE);
+      store.clear();
+      for (const rec of transactions) store.put(rec);
+      t.oncomplete = () => resolve();
+      t.onerror = () => reject(t.error);
+    }).catch((e) => console.error("Nepavyko išsaugoti į IndexedDB:", e));
+  }
 
-// --- CALCULATIONS ---
-function calcPortfolio(){
-const stocks={};
-const bySymbol={};
-transactions.forEach(t=>{
-const sym=t.symbol.toUpperCase();
-if(!bySymbol[sym])bySymbol[sym]=[];
-bySymbol[sym].push(t);
-});
+  // One-time migration of any existing localStorage data into IndexedDB.
+  async function migrateFromLocalStorage() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    try {
+      const data = JSON.parse(raw);
+      const existing = await dbGetAll();
+      if (Array.isArray(data) && data.length && existing.length === 0) {
+        transactions = data;
+        await save();
+        console.info("Perkelta " + data.length + " transakcijų iš localStorage į IndexedDB.");
+      }
+    } catch (e) {
+      console.error("Migracija iš localStorage nepavyko:", e);
+    }
+    localStorage.removeItem(STORAGE_KEY);
+  }
 
-Object.entries(bySymbol).forEach(([sym,txs])=>{
-let totalBought=0,totalCost=0,totalSold=0,totalRevenue=0;
-let latestPrice=pricesCache[sym];
-txs.forEach(t=>{
-const cost=Convert(t.price,t.currency||'USD')*t.shares;
-if(t.type==='buy'){totalBought+=t.shares;totalCost+=cost;}
-else{totalSold+=t.shares;totalRevenue+=cost;}
-});
-const remaining=totalBought-totalSold;
-const avgCost=totalBought>0?totalCost/totalBought:0;
-const realizedPL=totalRevenue-(avgCost*totalSold);
-const currentValue=remaining>0?(latestPrice?Convert(latestPrice,'USD')*remaining:0):0;
-const unrealizedPL=currentValue-(avgCost*remaining);
-stocks[sym]={sym,sharesBought:totalBought,costBasis:totalCost,sharesSold:totalSold,revenue:totalRevenue,remaining,avgCost,realizedPL,currentValue,unrealizedPL,latestPrice,transactions:txs};
-});
-return stocks;
-}
+  function loadPrices() {
+    try {
+      const raw = localStorage.getItem(PRICES_KEY);
+      const data = raw ? JSON.parse(raw) : {};
+      return data && typeof data === "object" ? data : {};
+    } catch (e) {
+      return {};
+    }
+  }
 
-function Convert(amount,from){
-if(from==='EUR')return amount/(eurUsdRate||0.96);
-return amount;
-}
-function ConvertFrom(amount,to){
-if(to==='EUR')return amount*(eurUsdRate||0.96);
-return amount;
-}
-function fmt(n){
-if(n==null||isNaN(n))return '€0.00';
-return (n>=0?'€':'−€')+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-}
-function fmtNum(n){
-if(n==null)return'0';
-return n.toLocaleString('lt-LT',{maximumFractionDigits:2});
-}
+  function savePrices() {
+    localStorage.setItem(PRICES_KEY, JSON.stringify(prices));
+  }
 
-// --- DASHBOARD ---
-async function renderDashboard(){
-const stocks=calcPortfolio();
-const totalInvested=Object.values(stocks).reduce((s,st)=>s+st.costBasis,0);
-const totalRevenue=Object.values(stocks).reduce((s,st)=>s+st.revenue,0);
-const totalValue=Object.values(stocks).reduce((s,st)=>s+st.currentValue,0);
-const totalPL=totalRevenue+totalValue-totalInvested;
-const totalRemaining=Object.values(stocks).reduce((s,st)=>s+st.remaining,0);
+  // Manual FX rates: currency -> EUR per 1 unit (e.g. { USD: 0.92 }).
+  const FX_KEY = "stocks_fx_v1";
+  let fxRates = loadFx();
 
-document.getElementById('stat-invested').textContent=fmt(totalInvested);
-document.getElementById('stat-value').textContent=fmt(totalValue);
-const plEl=document.getElementById('stat-pl');
-plEl.textContent=fmt(totalPL);
-plEl.className='val '+(totalPL>=0?'green':'red');
-document.getElementById('stat-holdings').textContent=fmtNum(totalRemaining)+' vnt.';
+  function loadFx() {
+    try {
+      const raw = localStorage.getItem(FX_KEY);
+      const data = raw ? JSON.parse(raw) : {};
+      return data && typeof data === "object" ? data : {};
+    } catch (e) {
+      return {};
+    }
+  }
 
-// Holdings table
-const tbody=document.getElementById('holdings-table');
-const active=Object.values(stocks).filter(s=>s.remaining>0);
-if(active.length===0&&transactions.length===0){
-tbody.innerHTML='<div class="empty-state"><p>📭 Dar nėra jokių transakcijų</p><button class="btn btn-primary btn-sm" onclick=&quot;openModal(\'buy\')&quot;>Pridėti pirmą pirkimą</button></div>';
-return;
-}
-if(active.length===0){
-tbody.innerHTML='<div class="empty-state"><p>📭 Visos akcijos parduotos</p><button class="btn btn-primary btn-sm" onclick=&quot;openModal(\'buy\')&quot;>Pridėti naują pirkimą</button></div>';
-return;
-}
-let html='<table><thead><tr><th>Simbolis</th><th class="text-right">Turiu</th><th class="text-right">Vid. kaina</th><th class="text-right">Dabartinė</th><th class="text-right">Vertė</th><th class="text-right">Pelnas</th><th class="text-right">Pokytis</th></tr></thead><tbody>';
-active.forEach(s=>{
-const priceDisplay=s.latestPrice!=null?Convert(s.latestPrice,'USD').toFixed(2)+'€':'—';
-const changePct=s.avgCost>0&&s.latestPrice!=null?((Convert(s.latestPrice,'USD')-s.avgCost)/s.avgCost*100):0;
-const changeClass=changePct>=0?'text-green':'text-red';
-const plClass=s.unrealizedPL>=0?'text-green':'text-red';
-html+='<tr><td><span class="symbol-badge">'+s.sym+'</span></td>'
-+'<td class="text-right">'+fmtNum(s.remaining)+'</td>'
-+'<td class="text-right">'+fmt(s.avgCost)+'</td>'
-+'<td class="text-right">'+priceDisplay+'</td>'
-+'<td class="text-right">'+fmt(s.currentValue)+'</td>'
-+'<td class="text-right '+plClass+'">'+fmt(s.unrealizedPL)+'</td>'
-+'<td class="text-right '+changeClass+'">'+(changePct!==0?(changePct>=0?'+':'')+changePct.toFixed(1)+'%':'—')+'</td></tr>';
-});
-html+='</tbody></table>';
-tbody.innerHTML=html;
+  function saveFx() {
+    localStorage.setItem(FX_KEY, JSON.stringify(fxRates));
+  }
 
-drawChart(active);
-}
+  // ---------- Yahoo Finance quotes ----------
+  const QUOTES_KEY = "stocks_quotes_v1";
+  // Yahoo Finance neturi CORS antraščių, todėl iš statinio puslapio einame per CORS tarpinį serverį.
+  // Bandome kelis proxy iš eilės — jei vienas neveikia ("Failed to fetch"), bandomas kitas.
+  // `unwrap` grąžina Yahoo JSON: allorigins /get įpakuoja į {contents}, kiti grąžina žalią atsakymą.
+  const PROXIES = [
+    { build: (u) => "https://api.allorigins.win/get?url=" + encodeURIComponent(u), unwrap: (j) => (j && typeof j.contents === "string" ? JSON.parse(j.contents) : j) },
+    { build: (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u), unwrap: (j) => j },
+    { build: (u) => "https://corsproxy.io/?url=" + encodeURIComponent(u), unwrap: (j) => j },
+    { build: (u) => "https://thingproxy.freeboard.io/fetch/" + u, unwrap: (j) => j },
+  ];
 
-function drawChart(stocks){
-const canvas=document.getElementById('portfolio-chart');
-if(!canvas)return;
-const ctx=canvas.getContext('2d');
-const rect=canvas.parentElement.getBoundingClientRect();
-canvas.width=Math.min(rect.width-40,800);
-canvas.height=250;
-const w=canvas.width,h=canvas.height;
-ctx.clearRect(0,0,w,h);
+  // Fetch a URL through the proxy list, returning parsed JSON from the first proxy that works.
+  async function fetchViaProxy(targetUrl) {
+    let lastErr;
+    for (const p of PROXIES) {
+      try {
+        const res = await fetch(p.build(targetUrl));
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = p.unwrap(await res.json());
+        if (data && data.chart) return data;
+        throw new Error("Netikėtas atsakymas");
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error("Nepavyko pasiekti duomenų");
+  }
 
-const active=stocks.filter(s=>s.currentValue>0);
-if(active.length===0){
-ctx.fillStyle='#8b949e';ctx.font='14px sans-serif';ctx.textAlign='center';
-ctx.fillText('Nėra duomenų portfelio struktūrai',w/2,h/2);
-return;
-}
-const total=active.reduce((s,st)=>s+st.currentValue,0);
-const colors=['#58a6ff','#3fb950','#d29922','#f85149','#bc8cff','#79c0ff','#56d364','#e3b341','#ff7b72','#d2a8ff'];
-const cx=w/2,cy=h/2+10,r=Math.min(w,h)/2-30;
-let startAngle=-Math.PI/2;
-active.forEach((s,i)=>{
-const pct=s.currentValue/total;
-const endAngle=startAngle+pct*2*Math.PI;
-ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,startAngle,endAngle);ctx.closePath();
-ctx.fillStyle=colors[i%colors.length];ctx.fill();
-startAngle=endAngle;
-});
-// Legend
-const legendY=h-20;
-let lx=20;
-ctx.font='11px sans-serif';
-active.forEach((s,i)=>{
-const pct=(s.currentValue/total*100).toFixed(1);
-const label=s.sym+' '+pct+'%';
-ctx.fillStyle=colors[i%colors.length];ctx.fillRect(lx,legendY-8,10,10);
-ctx.fillStyle='#e6edf3';ctx.textAlign='left';
-ctx.fillText(label,lx+14,legendY+2);
-lx+=ctx.measureText(label).width+24;
-});
-}
+  // quotes = { lastUpdated: ISOstring|null, data: { SYM: { price, currency, marketTime, series:[{t,c}] } } }
+  let quotes = loadQuotes();
 
-// --- TRANSACTIONS ---
-function renderTransactions(){
-const search=document.getElementById('tx-search').value.toLowerCase();
-const filter=document.getElementById('tx-filter').value;
-let list=[...transactions];
-if(filter!=='all')list=list.filter(t=>t.type===filter);
-if(search)list=list.filter(t=>t.symbol.toLowerCase().includes(search)||(t.notes||'').toLowerCase().includes(search));
-list.sort((a,b)=>b.date.localeCompare(a.date)||(b.createdAt||b.date).localeCompare(a.createdAt||a.date));
+  function loadQuotes() {
+    try {
+      const raw = localStorage.getItem(QUOTES_KEY);
+      const data = raw ? JSON.parse(raw) : null;
+      if (data && typeof data === "object" && data.data) return data;
+    } catch (e) { /* ignore */ }
+    return { lastUpdated: null, data: {} };
+  }
 
-const el=document.getElementById('transactions-list');
-if(list.length===0){
-el.innerHTML='<div class="empty-state"><p>📭 Transakcijų nerasta</p></div>';
-return;
-}
-let html='<table><thead><tr><th>Data</th><th>Tipas</th><th>Simbolis</th><th class="text-right">Kiekis</th><th class="text-right">Kaina</th><th class="text-right">Suma</th><th>Pastabos</th><th></th></tr></thead><tbody>';
-list.forEach(t=>{
-const total=Convert(t.price,t.currency||'USD')*t.shares;
-const badgeClass=t.type==='buy'?'badge-buy':'badge-sell';
-const badgeText=t.type==='buy'?'PIRKIMAS':'PARDAVIMAS';
-html+='<tr><td>'+t.date+'</td>'
-+'<td><span class="badge '+badgeClass+'">'+badgeText+'</span></td>'
-+'<td><span class="symbol-badge">'+t.symbol+'</span></td>'
-+'<td class="text-right">'+fmtNum(t.shares)+'</td>'
-+'<td class="text-right">'+t.price.toFixed(2)+'$</td>'
-+'<td class="text-right">'+fmt(total)+'</td>'
-+'<td class="text-muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(t.notes||'—')+'</td>'
-+'<td><div class="edit-btns">'
-+'<button class="edit-btn" onclick="openModal(\''+t.type+'\','+JSON.stringify(t).replace(/"/g,'&quot;')+')" title="Redaguoti">✏️</button>'
-+'<button class="del-btn" onclick="deleteTx(\''+t.id+'\')" title="Ištrinti">🗑️</button>'
-+'</div></td></tr>';
-});
-html+='</tbody></table>';
-el.innerHTML=html;
-}
+  function saveQuotes() {
+    localStorage.setItem(QUOTES_KEY, JSON.stringify(quotes));
+  }
 
-function deleteTx(id){
-if(!confirm('Ar tikrai norite ištrinti šią transakciją?'))return;
-transactions=transactions.filter(t=>t.id!==id);
-saveData();
-renderTransactions();
-renderDashboard();
-showToast('Transakcija ištrinta!','info');
-}
+  // Watchlist: symbols to chart that are NOT in transactions (stored as an array of codes).
+  const WATCH_KEY = "stocks_watchlist_v1";
+  let watchlist = loadWatch();
 
-// --- PRICES ---
-async function refreshPrices(){
-const status=document.getElementById('price-status');
-status.textContent='🔄 Atnaujinamos kainos...';
-const symbols=[...new Set(transactions.map(t=>t.symbol.toUpperCase()))];
-if(symbols.length===0){status.textContent='';return;}
-let count=0;
-const batchSize=5;
-for(let i=0;i<symbols.length;i+=batchSize){
-const batch=symbols.slice(i,i+batchSize);
-await Promise.all(batch.map(async(sym)=>{
-try{
-const resp=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/'+sym+'?interval=1d&range=5d');
-const data=await resp.json();
-const prices=data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close||[];
-const valid=prices.filter(p=>p!=null);
-if(valid.length>0){
-pricesCache[sym]=valid[valid.length-1];
-count++;
-}
-}catch(e){/* ignore */}
-}));
-await new Promise(r=>setTimeout(r,800));
-}
-status.textContent='✅ Atnaujintos '+count+'/'+symbols.length+' kainos';
-setTimeout(()=>status.textContent='',4000);
-renderDashboard();
-}
+  function loadWatch() {
+    try {
+      const raw = localStorage.getItem(WATCH_KEY);
+      const data = raw ? JSON.parse(raw) : [];
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      return [];
+    }
+  }
 
-// --- EUR/USD RATE ---
-async function fetchEurUsdRate(){
-try{
-const r=await fetch('https://open.er-api.com/v6/latest/USD');
-const d=await r.json();
-if(d.rates?.EUR)eurUsdRate=d.rates.EUR;
-}catch(e){eurUsdRate=0.96}
-}
-// Init
-(async()=>{
-await fetchEurUsdRate();
-await refreshPrices();
-renderDashboard();
-renderTransactions();
+  function saveWatch() {
+    localStorage.setItem(WATCH_KEY, JSON.stringify(watchlist));
+  }
+
+  function yahooUrl(sym) {
+    return "https://query1.finance.yahoo.com/v8/finance/chart/" + encodeURIComponent(sym) + "?interval=5m&range=1d";
+  }
+
+  async function fetchQuote(sym) {
+    const json = await fetchViaProxy(yahooUrl(sym));
+    const r = json && json.chart && json.chart.result && json.chart.result[0];
+    if (!r) {
+      const err = json && json.chart && json.chart.error;
+      if (err && err.description) throw new Error(err.description);
+      throw new Error("Nėra duomenų (nežinomas simbolis?)");
+    }
+    const meta = r.meta || {};
+    const ts = r.timestamp || [];
+    const q = r.indicators && r.indicators.quote && r.indicators.quote[0];
+    const closes = (q && q.close) || [];
+    const series = ts.map((t, i) => ({ t, c: closes[i] })).filter((p) => p.c != null);
+    const price = meta.regularMarketPrice != null ? meta.regularMarketPrice : (series.length ? series[series.length - 1].c : null);
+    if (price == null) throw new Error("Nėra kainos");
+    return { price, currency: meta.currency || "", marketTime: meta.regularMarketTime || null, series };
+  }
+
+  // Refresh a specific set of symbols; `btn` gets a loading state during the request.
+  async function refreshPrices(symbols, btn) {
+    if (!symbols.length) return;
+    let label;
+    if (btn) {
+      btn.disabled = true;
+      label = btn.textContent;
+      btn.textContent = "Atnaujinama…";
+    }
+
+    const results = await Promise.allSettled(symbols.map((s) => fetchQuote(s)));
+    const failed = [];
+    results.forEach((res, i) => {
+      const sym = symbols[i];
+      if (res.status === "fulfilled") {
+        prices[sym] = res.value.price;
+        quotes.data[sym] = res.value;
+      } else {
+        const msg = (res.reason && res.reason.message) ? res.reason.message : String(res.reason);
+        console.error("Kainos klaida (" + sym + "):", res.reason);
+        failed.push(sym + ": " + msg);
+      }
+    });
+    quotes.lastUpdated = new Date().toISOString();
+
+    savePrices();
+    saveQuotes();
+    if (btn) { btn.disabled = false; btn.textContent = label; }
+    render();
+
+    if (failed.length) {
+      alert("Nepavyko atnaujinti " + failed.length + " iš " + symbols.length + ":\n\n" + failed.join("\n"));
+    }
+  }
+
+  // Fetch the <cur>/EUR rate from Yahoo (pair "<cur>EUR=X" gives EUR per 1 unit of <cur>).
+  async function refreshFxRate(cur, btn) {
+    if (!cur || cur === "EUR") return;
+    let label;
+    if (btn) { btn.disabled = true; label = btn.textContent; btn.textContent = "⏳"; }
+    try {
+      const q = await fetchQuote(cur + "EUR=X");
+      if (!(q.price > 0)) throw new Error("Nėra kurso");
+      fxRates[cur] = q.price;
+      saveFx();
+      render();
+    } catch (e) {
+      if (btn) { btn.disabled = false; btn.textContent = label; }
+      alert("Nepavyko gauti " + cur + "/EUR kurso: " + (e && e.message ? e.message : e));
+    }
+  }
+
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+
+  // ---------- Formatting ----------
+  const eur = (n) => (n < 0 ? "-" : "") + "€" + Math.abs(n).toLocaleString("lt-LT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const num = (n) => n.toLocaleString("lt-LT", { maximumFractionDigits: 4 });
+  const pct = (n) => (n >= 0 ? "+" : "") + n.toFixed(2).replace(".", ",") + "%";
+  const pct1 = (n) => n.toFixed(1).replace(".", ",") + "%";
+  const cls = (n) => (n > 0 ? "pos" : n < 0 ? "neg" : "");
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  // Parse a user-entered number. Strips spaces, currency symbols and invisible characters
+  // (e.g. U+2060 word-joiner, non-breaking spaces), and accepts both "," and "." as the decimal
+  // separator. If both appear ("1.234,56"), "." is treated as a thousands separator.
+  const parseNum = (v) => {
+    let s = String(v).replace(/[^\d.,-]/g, "");
+    if (s.indexOf(",") !== -1 && s.indexOf(".") !== -1) {
+      s = s.replace(/\./g, "").replace(",", ".");
+    } else {
+      s = s.replace(",", ".");
+    }
+    return parseFloat(s);
+  };
+  // Format a number for an input field using a comma decimal separator, no grouping.
+  const toInput = (n) => (n == null || n === "" || !isFinite(Number(n))) ? "" : String(n).replace(".", ",");
+  // Supported trading currencies for transactions.
+  const CURRENCIES = ["EUR", "USD", "GBP", "CHF"];
+  // Display symbol for a currency code (falls back to the code itself, e.g. CHF).
+  const CUR_SYMBOL = { EUR: "€", USD: "$", GBP: "£", CHF: "CHF" };
+  const curSymbol = (cur) => CUR_SYMBOL[cur] || cur || "€";
+  // Format an amount in a given native currency. Single-glyph symbols (€ $ £) go in front,
+  // multi-letter codes (CHF) go after.
+  const money = (n, cur) => {
+    const s = Math.abs(n).toLocaleString("lt-LT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const sign = n < 0 ? "-" : "";
+    const sym = curSymbol(cur);
+    return sym.length === 1 ? sign + sym + s : sign + s + " " + sym;
+  };
+
+  // ---------- Calculations ----------
+  // Positions computed chronologically using average-cost basis.
+  function computePositions() {
+    // Chronological; ties broken by "buy before sell" so same-day sells always have shares to draw from.
+    const order = { buy: 0, sell: 1 };
+    const sorted = [...transactions].sort((a, b) => {
+      if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+      return (order[a.type] || 0) - (order[b.type] || 0);
+    });
+    // All monetary fields (cost, realized, proceeds) are in EUR base, using each transaction's
+    // effective EUR unit price. `currency` is the stock's native trading currency (for display/live price).
+    // EUR fields (cost, realized, proceeds) power the portfolio base; `costNative` mirrors the cost
+    // basis in the stock's native currency (average-cost on the native price) for per-position display.
+    const pos = {}; // symbol -> {shares, cost, costNative, realized, boughtShares, boughtCost, soldShares, soldProceeds, currency}
+    let realizedTotal = 0;
+
+    for (const t of sorted) {
+      const sym = t.symbol;
+      if (!pos[sym]) pos[sym] = { shares: 0, cost: 0, costNative: 0, realized: 0, boughtShares: 0, boughtCost: 0, soldShares: 0, soldProceeds: 0, currency: "EUR" };
+      const p = pos[sym];
+      const cur = txCurrency(t);
+      if (cur !== "EUR") p.currency = cur; // non-EUR currency wins
+      const shares = Number(t.shares);
+      const price = eurUnit(t);            // EUR per share (fee included)
+      const nativePrice = Number(t.price); // per share in native currency
+
+      if (t.type === "buy") {
+        p.shares += shares;
+        p.cost += shares * price;
+        p.costNative += shares * nativePrice;
+        p.boughtShares += shares;
+        p.boughtCost += shares * price;
+      } else {
+        const avg = p.shares > 0 ? p.cost / p.shares : 0;
+        const avgNative = p.shares > 0 ? p.costNative / p.shares : 0;
+        const sold = Math.min(shares, p.shares);
+        const gain = (price - avg) * sold;
+        p.realized += gain;
+        realizedTotal += gain;
+        p.cost -= avg * sold;
+        p.costNative -= avgNative * sold;
+        p.shares -= sold;
+        p.soldShares += sold;
+        p.soldProceeds += price * sold;
+        if (p.shares < 1e-9) { p.shares = 0; p.cost = 0; p.costNative = 0; }
+      }
+    }
+    return { pos, realizedTotal };
+  }
+
+  // Stock's native currency for a transaction (defaults to EUR for legacy records).
+  function txCurrency(t) { return t.currency || "EUR"; }
+
+  // Base EUR value of a transaction's shares, excluding any fee.
+  // For non-EUR trades this is the entered converted amount; for EUR trades it's shares × price.
+  function baseEur(t) {
+    if (txCurrency(t) !== "EUR" && Number(t.eurAmount) > 0) return Number(t.eurAmount);
+    return Number(t.shares) * Number(t.price);
+  }
+
+  // Total EUR that hit the account, including fees: a buy costs more, a sell nets less.
+  function txEurTotal(t) {
+    const fee = Number(t.fee) > 0 ? Number(t.fee) : 0;
+    const base = baseEur(t);
+    return t.type === "sell" ? base - fee : base + fee;
+  }
+
+  // Effective EUR price per share (fee included), used for cost basis and realized P/L.
+  function eurUnit(t) {
+    const shares = Number(t.shares);
+    return shares > 0 ? txEurTotal(t) / shares : Number(t.price);
+  }
+
+  // Manual current FX rate: EUR per 1 unit of `cur`. Returns null if a non-EUR rate isn't set.
+  function fxRate(cur) {
+    if (!cur || cur === "EUR") return 1;
+    const v = Number(fxRates[cur]);
+    return v > 0 ? v : null;
+  }
+
+  // Current market price for a symbol (0 if not set), in the stock's native currency.
+  function priceOf(sym) {
+    const v = Number(prices[sym]);
+    return v > 0 ? v : 0;
+  }
+
+  // EUR market value of a position. `valued` is false when the native price or FX rate is missing,
+  // in which case we fall back to the EUR cost basis (so totals stay reasonable).
+  function marketValueEur(sym, p) {
+    const cp = priceOf(sym);
+    const rate = fxRate(p.currency);
+    if (cp > 0 && rate != null) return { mv: cp * p.shares * rate, valued: true };
+    return { mv: p.cost, valued: false };
+  }
+
+  // ---------- Rendering ----------
+  function render() {
+    const { pos, realizedTotal } = computePositions();
+    const open = Object.entries(pos).filter(([, p]) => p.shares > 1e-9);
+
+    // Portfolio totals in EUR. Non-EUR current prices are converted with the manual FX rate;
+    // if the rate (or price) is missing, we fall back to cost basis for that position.
+    let invested = 0, marketValue = 0, unrealized = 0, valuedCost = 0;
+    for (const [sym, p] of open) {
+      invested += p.cost;
+      const mvInfo = marketValueEur(sym, p);
+      marketValue += mvInfo.mv;
+      if (mvInfo.valued) { unrealized += mvInfo.mv - p.cost; valuedCost += p.cost; }
+    }
+    const unrealizedPct = valuedCost > 0 ? (unrealized / valuedCost) * 100 : 0;
+    const totalPL = realizedTotal + unrealized;
+
+    // Summary cards
+    $("#cards").innerHTML = `
+      <div class="card"><div class="label">Investuota (atviros pozicijos)</div><div class="value">${eur(invested)}</div></div>
+      <div class="card"><div class="label">Rinkos vertė</div><div class="value">${eur(marketValue)}</div></div>
+      <div class="card"><div class="label">Neralizuotas P/L</div><div class="value ${cls(unrealized)}">${eur(unrealized)}<span style="font-size:14px"> (${pct(unrealizedPct)})</span></div></div>
+      <div class="card"><div class="label">Realizuotas P/L</div><div class="value ${cls(realizedTotal)}">${eur(realizedTotal)}</div></div>
+      <div class="card"><div class="label">Bendras P/L</div><div class="value ${cls(totalPL)}">${eur(totalPL)}</div></div>
+      <div class="card"><div class="label">Atviros pozicijos</div><div class="value">${open.length}</div></div>
+    `;
+
+    // Holdings
+    if (open.length === 0) {
+      $("#holdings").innerHTML = `<div class="card empty">Nėra atvirų pozicijų. Pridėk pirmą pirkimą 👆</div>`;
+    } else {
+      const rows = open
+        .sort((a, b) => b[1].cost - a[1].cost)
+        .map(([sym, p]) => {
+          const cur = p.currency;
+          const isEur = cur === "EUR";
+          const cp = priceOf(sym); // native currency price
+          // avg / cost / market value are shown in the stock's native currency
+          const dispCost = isEur ? p.cost : p.costNative;
+          const dispAvg = dispCost / p.shares;
+          const dispMv = cp > 0 ? cp * p.shares : null; // native market value
+          // P/L stays in the EUR base (accounts for FX)
+          const { mv, valued } = marketValueEur(sym, p);
+          const upl = valued ? mv - p.cost : 0;
+          const uplPct = valued && p.cost > 0 ? (upl / p.cost) * 100 : 0;
+          const weight = marketValue > 0 ? (mv / marketValue) * 100 : 0;
+          const curTag = !isEur ? `<span class="cur-tag">${esc(curSymbol(cur))}</span>` : "";
+          const plCell = valued
+            ? `<td class="${cls(upl)}">${eur(upl)}</td><td class="${cls(upl)}">${pct(uplPct)}</td>`
+            : `<td class="muted-cell" colspan="2">${cp > 0 && !isEur ? "įvesk " + esc(curSymbol(cur)) + " kursą" : "įvesk kainą"}</td>`;
+          return `<tr>
+            <td class="sym">${esc(sym)}${curTag}</td>
+            <td>${num(p.shares)}</td>
+            <td>${money(dispAvg, cur)}</td>
+            <td>${money(dispCost, cur)}</td>
+            <td class="price-cell">
+              <input class="price-input num-input" type="text" inputmode="decimal" data-price="${esc(sym)}" value="${cp > 0 ? toInput(cp) : ""}" placeholder="—">
+              ${!isEur ? `<span class="cur-suffix">${esc(curSymbol(cur))}</span>` : ""}
+            </td>
+            <td>${dispMv != null ? money(dispMv, cur) : "—"}</td>
+            ${plCell}
+            <td>${pct1(weight)}</td>
+          </tr>`;
+        }).join("");
+      $("#holdings").innerHTML = `<table>
+        <thead><tr>
+          <th>Simbolis</th><th>Kiekis</th><th>Vid. kaina</th><th>Savikaina</th>
+          <th>Dabartinė kaina</th><th>Rinkos vertė</th><th>Neral. P/L (€)</th><th>%</th><th>Dalis</th>
+        </tr></thead>
+        <tbody>${rows}</tbody></table>`;
+    }
+
+    renderFxBar(open);
+    renderRealized(pos);
+    renderQuotes(pos);
+    renderHistory();
+  }
+
+  // Last-updated label, chart symbol selector and the chart itself.
+  function renderQuotes(pos) {
+    const lu = $("#lastUpdated");
+    if (quotes.lastUpdated) {
+      const d = new Date(quotes.lastUpdated);
+      lu.textContent = "Atnaujinta: " + d.toLocaleString("lt-LT");
+    } else {
+      lu.textContent = "Kainos dar neatnaujintos";
+    }
+
+    // Transaction symbols (open first by size, then other traded), then watchlist-only symbols.
+    const openSyms = Object.entries(pos).filter(([, p]) => p.shares > 1e-9).sort((a, b) => b[1].cost - a[1].cost).map(([s]) => s);
+    const txSymbols = [...openSyms];
+    for (const s of Object.keys(pos).sort()) if (!txSymbols.includes(s)) txSymbols.push(s);
+    const watchOnly = watchlist.filter((s) => !txSymbols.includes(s)).sort();
+
+    const options = txSymbols.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`)
+      .concat(watchOnly.map((s) => `<option value="${esc(s)}">${esc(s)} — stebimas</option>`))
+      .join("");
+
+    const sel = $("#chartSymbol");
+    const prev = sel.value;
+    sel.innerHTML = options;
+    const all = txSymbols.concat(watchOnly);
+    if (all.includes(prev)) sel.value = prev;
+
+    renderChart();
+  }
+
+  // Is the given symbol a watchlist-only entry (not present in any transaction)?
+  function isWatchOnly(sym) {
+    return watchlist.includes(sym) && !transactions.some((t) => t.symbol === sym);
+  }
+
+  function renderChart() {
+    const box = $("#chart");
+    const sym = $("#chartSymbol").value;
+    $("#removeWatchBtn").style.display = isWatchOnly(sym) ? "" : "none";
+    if (!sym) { box.innerHTML = `<div class="empty">Nėra akcijų. Pridėk transakciją arba stebimą simbolį 👆</div>`; return; }
+    const q = quotes.data[sym];
+    if (!q || !q.series || q.series.length < 2) {
+      box.innerHTML = `<div class="empty">${esc(sym)}: grafiko dar nėra. Paspausk „Atnaujinti grafiką".</div>`;
+      return;
+    }
+    const chart = buildChartSVG(sym, q);
+    box.innerHTML = chart.html;
+    attachChartHover(box, chart);
+  }
+
+  function buildChartSVG(sym, q) {
+    const series = q.series;
+    const currency = q.currency || "EUR";
+    const W = 800, H = 260, P = 40;
+    const cs = series.map((p) => p.c);
+    const min = Math.min(...cs), max = Math.max(...cs);
+    const range = (max - min) || 1;
+    const x = (i) => P + (i / (series.length - 1)) * (W - 2 * P);
+    const y = (c) => H - P - ((c - min) / range) * (H - 2 * P);
+    const line = series.map((p, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(p.c).toFixed(1)).join(" ");
+    const area = line + " L" + x(series.length - 1).toFixed(1) + " " + (H - P) + " L" + x(0).toFixed(1) + " " + (H - P) + " Z";
+    const up = cs[cs.length - 1] >= cs[0];
+    const color = up ? "#22c55e" : "#ef4444";
+    const chg = cs[0] ? ((cs[cs.length - 1] - cs[0]) / cs[0]) * 100 : 0;
+
+    const fmtT = (t) => new Date(t * 1000).toLocaleString("lt-LT", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+    const gid = "grad_" + sym.replace(/[^A-Za-z0-9]/g, "");
+
+    const html = `
+      <div class="chart-head">
+        <span class="chart-title">${esc(sym)}</span>
+        <span class="chart-price ${up ? "pos" : "neg"}">${esc(money(cs[cs.length - 1], currency))} <span style="font-size:14px">(${pct(chg)})</span></span>
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(sym)} kainos grafikas">
+        <defs>
+          <linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${color}" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="${area}" fill="url(#${gid})"/>
+        <path d="${line}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <text class="axis" x="${P}" y="16" text-anchor="start">${max.toLocaleString("lt-LT", { maximumFractionDigits: 2 })}</text>
+        <text class="axis" x="${P}" y="${H - P + 16}" text-anchor="start">${min.toLocaleString("lt-LT", { maximumFractionDigits: 2 })}</text>
+        <text class="axis" x="${P}" y="${H - 6}" text-anchor="start">${fmtT(series[0].t)}</text>
+        <text class="axis" x="${W - P}" y="${H - 6}" text-anchor="end">${fmtT(series[series.length - 1].t)}</text>
+        <line class="crosshair" x1="0" y1="${P}" x2="0" y2="${H - P}"/>
+        <circle class="cursor-dot" r="4" fill="${color}"/>
+        <rect class="chart-hit" x="${P}" y="0" width="${W - 2 * P}" height="${H}" fill="transparent"/>
+      </svg>
+      <div class="chart-tip"></div>`;
+
+    return { html, series, currency, W, H, P, min, max, range };
+  }
+
+  // Attach crosshair + tooltip interaction to a rendered chart.
+  function attachChartHover(box, g) {
+    const svg = box.querySelector("svg");
+    const hit = svg && svg.querySelector(".chart-hit");
+    const line = svg && svg.querySelector(".crosshair");
+    const dot = svg && svg.querySelector(".cursor-dot");
+    const tip = box.querySelector(".chart-tip");
+    if (!svg || !hit || !line || !dot || !tip) return;
+
+    const n = g.series.length;
+    const xAt = (i) => g.P + (i / (n - 1)) * (g.W - 2 * g.P);
+    const yAt = (c) => g.H - g.P - ((c - g.min) / g.range) * (g.H - 2 * g.P);
+    const fmtT = (t) => new Date(t * 1000).toLocaleString("lt-LT", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+
+    function move(clientX) {
+      const rect = svg.getBoundingClientRect();
+      const vbX = ((clientX - rect.left) / rect.width) * g.W; // to viewBox coordinates
+      let i = Math.round(((vbX - g.P) / (g.W - 2 * g.P)) * (n - 1));
+      i = Math.max(0, Math.min(n - 1, i));
+      const px = xAt(i), py = yAt(g.series[i].c);
+      line.setAttribute("x1", px); line.setAttribute("x2", px);
+      dot.setAttribute("cx", px); dot.setAttribute("cy", py);
+      svg.classList.add("hovering");
+
+      tip.innerHTML = `<span class="tip-price">${esc(money(g.series[i].c, g.currency))}</span><span class="tip-time">${esc(fmtT(g.series[i].t))}</span>`;
+      const boxRect = box.getBoundingClientRect();
+      tip.style.left = (rect.left - boxRect.left + (px / g.W) * rect.width) + "px";
+      tip.style.top = (rect.top - boxRect.top + (py / g.H) * rect.height) + "px";
+      tip.classList.add("show");
+    }
+    function leave() { svg.classList.remove("hovering"); tip.classList.remove("show"); }
+
+    hit.addEventListener("mousemove", (e) => move(e.clientX));
+    hit.addEventListener("mouseleave", leave);
+    hit.addEventListener("touchmove", (e) => { if (e.touches[0]) { move(e.touches[0].clientX); e.preventDefault(); } }, { passive: false });
+    hit.addEventListener("touchend", leave);
+  }
+
+  // Add a symbol to the watchlist (chart-only), then fetch and show its chart.
+  function addWatch(btn) {
+    const input = $("#watchAdd");
+    const sym = input.value.trim().toUpperCase();
+    if (!sym) { input.focus(); return; }
+    if (!watchlist.includes(sym)) { watchlist.push(sym); saveWatch(); }
+    input.value = "";
+    render();                          // rebuild selector including the new symbol
+    $("#chartSymbol").value = sym;
+    renderChart();                     // show placeholder while loading
+    refreshPrices([sym], btn);         // fetch data + re-render (keeps selection)
+  }
+
+  // Remove the currently selected watchlist symbol.
+  function removeWatch() {
+    const sym = $("#chartSymbol").value;
+    if (!isWatchOnly(sym)) return;
+    watchlist = watchlist.filter((s) => s !== sym);
+    delete quotes.data[sym];
+    delete prices[sym];
+    saveWatch(); saveQuotes(); savePrices();
+    render();
+  }
+
+  // Currency-rates section (own table) for every non-EUR currency held in open positions.
+  function renderFxBar(open) {
+    const currencies = [...new Set(open.map(([, p]) => p.currency).filter((c) => c && c !== "EUR"))];
+    const section = $("#fxSection");
+    if (currencies.length === 0) { section.innerHTML = ""; return; }
+    const rows = currencies.map((c) => {
+      const r = Number(fxRates[c]);
+      const inv = r > 0 ? 1 / r : null;
+      return `<tr>
+        <td class="sym">${esc(curSymbol(c))} <span class="cur-tag">${esc(c)}</span></td>
+        <td class="price-cell">
+          <input class="num-input fx-input" type="text" inputmode="decimal" data-fx="${esc(c)}" value="${r > 0 ? toInput(r) : ""}" placeholder="?"> €
+        </td>
+        <td>${inv != null ? toInput(Number(inv.toFixed(4))) + " " + esc(curSymbol(c)) : "—"}</td>
+        <td><button class="icon" data-action="refresh-fx" data-cur="${esc(c)}" title="Paimti ${esc(c)}/EUR kursą iš Yahoo">🔄</button></td>
+      </tr>`;
+    }).join("");
+    section.innerHTML = `<h2>Valiutų kursai</h2>
+      <table>
+        <thead><tr><th>Valiuta</th><th>1 vnt. = €</th><th>1 € = ?</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  // Realized P/L per symbol — persists even after a position is fully closed.
+  function renderRealized(pos) {
+    const rows = Object.entries(pos)
+      .filter(([, p]) => Math.abs(p.realized) > 1e-9)
+      .sort((a, b) => b[1].realized - a[1].realized);
+    if (rows.length === 0) { $("#realized").innerHTML = ""; return; }
+
+    const body = rows.map(([sym, p]) => {
+      const status = p.shares > 1e-9 ? "Atvira" : "Uždaryta";
+      const ret = p.boughtCost > 0 ? (p.realized / p.boughtCost) * 100 : 0;
+      return `<tr>
+        <td class="sym">${esc(sym)}</td>
+        <td>${status}</td>
+        <td>${num(p.soldShares)}</td>
+        <td>${eur(p.soldProceeds)}</td>
+        <td class="${cls(p.realized)}">${eur(p.realized)}</td>
+        <td class="${cls(ret)}">${pct(ret)}</td>
+      </tr>`;
+    }).join("");
+    $("#realized").innerHTML = `<h2>Realizuoti sandoriai</h2><table>
+      <thead><tr><th>Simbolis</th><th>Būsena</th><th>Parduota vnt.</th><th>Gauta</th><th>Realizuotas P/L</th><th>Grąža</th></tr></thead>
+      <tbody>${body}</tbody></table>`;
+  }
+
+  function renderHistory() {
+    const q = $("#search").value.trim().toUpperCase();
+    const typeF = $("#typeFilter").value;
+    const list = [...transactions]
+      .filter((t) => (!q || t.symbol.includes(q)) && (!typeF || t.type === typeF))
+      .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+
+    if (list.length === 0) {
+      $("#history").innerHTML = `<div class="card empty">Transakcijų nerasta.</div>`;
+      return;
+    }
+
+    const rows = list.map((t) => {
+      const cur = txCurrency(t);
+      const eurTotal = txEurTotal(t); // all-in EUR (fee included)
+      const tag = t.type === "buy" ? '<span class="tag buy">PIRK</span>' : '<span class="tag sell">PARD</span>';
+      return `<tr>
+        <td>${esc(t.date)}</td>
+        <td>${tag}</td>
+        <td class="sym">${esc(t.symbol)}${cur !== "EUR" ? `<span class="cur-tag">${esc(curSymbol(cur))}</span>` : ""}</td>
+        <td>${num(Number(t.shares))}</td>
+        <td>${money(Number(t.price), cur)}</td>
+        <td>${isFinite(eurTotal) ? eur(eurTotal) : "—"}</td>
+        <td>${esc(t.notes || "")}</td>
+        <td>
+          <button class="icon" data-action="edit" data-id="${t.id}">✎</button>
+          <button class="icon danger" data-action="delete" data-id="${t.id}">🗑</button>
+        </td>
+      </tr>`;
+    }).join("");
+
+    $("#history").innerHTML = `<table>
+      <thead><tr><th>Data</th><th>Tipas</th><th>Simbolis</th><th>Kiekis</th><th>Kaina</th><th>Suma (€)</th><th>Pastabos</th><th></th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+  }
+
+  // ---------- Modal ----------
+  function openModal(tx) {
+    if (!$("#txCurrency").options.length) {
+      $("#txCurrency").innerHTML = CURRENCIES.map((c) => `<option value="${c}">${c}</option>`).join("");
+    }
+    $("#modalTitle").textContent = tx ? "Redaguoti transakciją" : "Nauja transakcija";
+    $("#txId").value = tx ? tx.id : "";
+    $("#txType").value = tx ? tx.type : "buy";
+    $("#txSymbol").value = tx ? tx.symbol : "";
+    $("#txCurrency").value = tx ? txCurrency(tx) : "EUR";
+    $("#txShares").value = tx ? toInput(tx.shares) : "";
+    $("#txPrice").value = tx ? toInput(tx.price) : "";
+    $("#txEurAmount").value = tx && tx.eurAmount ? toInput(tx.eurAmount) : "";
+    $("#txFee").value = tx && tx.fee ? toInput(tx.fee) : "";
+    $("#txDate").value = tx ? tx.date : new Date().toISOString().slice(0, 10);
+    $("#txNotes").value = tx ? tx.notes || "" : "";
+    updateCurrencyUI();
+    $("#modal").classList.add("open");
+    $("#txSymbol").focus();
+  }
+  function closeModal() { $("#modal").classList.remove("open"); }
+  function closeAllModals() { document.querySelectorAll(".modal-backdrop.open").forEach((m) => m.classList.remove("open")); }
+
+  // Show/hide the EUR-amount field and adapt labels to the chosen currency and buy/sell type.
+  function updateCurrencyUI() {
+    const cur = $("#txCurrency").value;
+    const isSell = $("#txType").value === "sell";
+    const foreign = cur !== "EUR";
+    $("#txPriceLabel").textContent = "Kaina už vienetą (" + curSymbol(cur) + ")";
+    $("#txEurField").style.display = foreign ? "" : "none";
+    $("#txEurLabel").textContent = isSell ? "Gauta suma (€, be mokesčio)" : "Konvertuota suma (€, be mokesčio)";
+
+    const hint = $("#txFxHint");
+    const shares = parseNum($("#txShares").value);
+    const price = parseNum($("#txPrice").value);
+    const fee = parseNum($("#txFee").value) > 0 ? parseNum($("#txFee").value) : 0;
+    const parts = [];
+
+    if (foreign) {
+      const eurAmt = parseNum($("#txEurAmount").value);
+      if (shares > 0 && eurAmt > 0) {
+        if (price > 0) {
+          const eurPerCur = eurAmt / (shares * price);
+          const curPerEur = (shares * price) / eurAmt;
+          parts.push("1 " + curSymbol(cur) + " ≈ " + toInput(Number(eurPerCur.toFixed(4))) + " €");
+          parts.push("1 € ≈ " + toInput(Number(curPerEur.toFixed(4))) + " " + curSymbol(cur));
+        }
+        const total = isSell ? eurAmt - fee : eurAmt + fee;
+        parts.push((isSell ? "Gauta grynais" : "Savikaina su mokesčiu") + ": " + eur(total) + " (" + eur(total / shares) + "/vnt)");
+      } else {
+        parts.push("Įvesk konvertuotą EUR sumą — pagal ją skaičiuojama EUR savikaina.");
+      }
+    } else if (fee > 0 && shares > 0 && price > 0) {
+      const base = shares * price;
+      const total = isSell ? base - fee : base + fee;
+      parts.push((isSell ? "Gauta grynais" : "Savikaina su mokesčiu") + ": " + eur(total) + " (" + eur(total / shares) + "/vnt)");
+    }
+    hint.textContent = parts.join(" · ");
+  }
+
+  $("#txForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const id = $("#txId").value;
+    const cur = $("#txCurrency").value;
+    const foreign = cur !== "EUR";
+    const record = {
+      id: id || uid(),
+      type: $("#txType").value,
+      symbol: $("#txSymbol").value.trim().toUpperCase(),
+      currency: cur,
+      shares: parseNum($("#txShares").value),
+      price: parseNum($("#txPrice").value),
+      eurAmount: foreign ? parseNum($("#txEurAmount").value) : null,
+      fee: parseNum($("#txFee").value) > 0 ? parseNum($("#txFee").value) : 0,
+      date: $("#txDate").value,
+      notes: $("#txNotes").value.trim(),
+    };
+    if (!record.symbol || !(record.shares > 0) || !(record.price >= 0)) return;
+    if (foreign && !(record.eurAmount > 0)) {
+      alert("Ne-EUR valiutai įvesk konvertuotą EUR sumą (be mokesčio).");
+      return;
+    }
+    if (!foreign) record.eurAmount = record.shares * record.price;
+
+    if (id) {
+      const i = transactions.findIndex((t) => t.id === id);
+      if (i >= 0) transactions[i] = record;
+    } else {
+      transactions.push(record);
+    }
+    save();
+    render();
+    closeModal();
+  });
+
+  ["#txCurrency", "#txType", "#txShares", "#txPrice", "#txEurAmount", "#txFee"].forEach((sel) => {
+    document.querySelector(sel).addEventListener("input", updateCurrencyUI);
+    document.querySelector(sel).addEventListener("change", updateCurrencyUI);
+  });
+
+  // ---------- Export / Import ----------
+  function exportData() {
+    $("#exportText").value = JSON.stringify(transactions, null, 2);
+    $("#exportModal").classList.add("open");
+  }
+
+  function copyExport() {
+    const ta = $("#exportText");
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    const done = (ok) => {
+      const btn = document.querySelector('[data-action="copy"]');
+      if (btn) { btn.textContent = ok ? "✅ Nukopijuota" : "⚠ Nepavyko"; setTimeout(() => (btn.textContent = "📋 Kopijuoti"), 1500); }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ta.value).then(() => done(true)).catch(() => done(false));
+    } else {
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  }
+
+  function exportReport() {
+    $("#reportText").value = buildReport();
+    $("#reportModal").classList.add("open");
+  }
+
+  function buildReport() {
+    const { pos, realizedTotal } = computePositions();
+    const open = Object.entries(pos).filter(([, p]) => p.shares > 1e-9);
+
+    let invested = 0, marketValue = 0, unrealized = 0, valuedCost = 0;
+    for (const [sym, p] of open) {
+      invested += p.cost;
+      const mvInfo = marketValueEur(sym, p);
+      marketValue += mvInfo.mv;
+      if (mvInfo.valued) { unrealized += mvInfo.mv - p.cost; valuedCost += p.cost; }
+    }
+    const unrealizedPct = valuedCost > 0 ? (unrealized / valuedCost) * 100 : 0;
+    const totalPL = realizedTotal + unrealized;
+
+    const md = [];
+    md.push("# 📈 Akcijų portfelis");
+    md.push("");
+    md.push("_Sugeneruota: " + new Date().toISOString().slice(0, 10) + "_");
+    md.push("");
+    md.push("## Suvestinė");
+    md.push("");
+    md.push("| Rodiklis | Reikšmė |");
+    md.push("| --- | ---: |");
+    md.push("| Investuota (atviros pozicijos) | " + eur(invested) + " |");
+    md.push("| Rinkos vertė | " + eur(marketValue) + " |");
+    md.push("| Neralizuotas P/L | " + eur(unrealized) + " (" + pct(unrealizedPct) + ") |");
+    md.push("| Realizuotas P/L | " + eur(realizedTotal) + " |");
+    md.push("| Bendras P/L | " + eur(totalPL) + " |");
+    md.push("| Atviros pozicijos | " + open.length + " |");
+    md.push("| Transakcijų | " + transactions.length + " |");
+    md.push("");
+
+    md.push("## Turimos pozicijos");
+    md.push("");
+    if (open.length === 0) {
+      md.push("_Nėra atvirų pozicijų._");
+    } else {
+      md.push("| Simbolis | Val. | Kiekis | Vid. kaina | Savikaina | Dabartinė kaina | Rinkos vertė | Neral. P/L (€) | % | Dalis |");
+      md.push("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |");
+      open.sort((a, b) => b[1].cost - a[1].cost).forEach(([sym, p]) => {
+        const cur = p.currency;
+        const isEur = cur === "EUR";
+        const cp = priceOf(sym);
+        const dispCost = isEur ? p.cost : p.costNative;
+        const dispMv = cp > 0 ? cp * p.shares : null;
+        const { mv, valued } = marketValueEur(sym, p);
+        const upl = valued ? mv - p.cost : 0;
+        const uplPct = valued && p.cost > 0 ? (upl / p.cost) * 100 : 0;
+        const weight = marketValue > 0 ? (mv / marketValue) * 100 : 0;
+        md.push("| " + sym + " | " + curSymbol(cur) + " | " + num(p.shares) + " | " + money(dispCost / p.shares, cur) + " | " + money(dispCost, cur) +
+          " | " + (cp > 0 ? money(cp, cur) : "—") + " | " + (dispMv != null ? money(dispMv, cur) : "—") + " | " + (valued ? eur(upl) : "—") +
+          " | " + (valued ? pct(uplPct) : "—") + " | " + pct1(weight) + " |");
+      });
+    }
+    md.push("");
+
+    const realized = Object.entries(pos).filter(([, p]) => Math.abs(p.realized) > 1e-9);
+    if (realized.length > 0) {
+      md.push("## Realizuoti sandoriai");
+      md.push("");
+      md.push("| Simbolis | Būsena | Parduota vnt. | Gauta | Realizuotas P/L | Grąža |");
+      md.push("| --- | --- | ---: | ---: | ---: | ---: |");
+      realized.sort((a, b) => b[1].realized - a[1].realized).forEach(([sym, p]) => {
+        const status = p.shares > 1e-9 ? "Atvira" : "Uždaryta";
+        const ret = p.boughtCost > 0 ? (p.realized / p.boughtCost) * 100 : 0;
+        md.push("| " + sym + " | " + status + " | " + num(p.soldShares) + " | " + eur(p.soldProceeds) +
+          " | " + eur(p.realized) + " | " + pct(ret) + " |");
+      });
+      md.push("");
+    }
+
+    md.push("## Transakcijų istorija");
+    md.push("");
+    if (transactions.length === 0) {
+      md.push("_Nėra transakcijų._");
+    } else {
+      md.push("| Data | Tipas | Simbolis | Kiekis | Kaina | Suma (€) | Pastabos |");
+      md.push("| --- | --- | --- | ---: | ---: | ---: | --- |");
+      [...transactions]
+        .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+        .forEach((t) => {
+          const tp = t.type === "buy" ? "Pirkimas" : "Pardavimas";
+          const cur = txCurrency(t);
+          md.push("| " + t.date + " | " + tp + " | " + t.symbol + " | " + num(Number(t.shares)) +
+            " | " + money(Number(t.price), cur) + " | " + eur(txEurTotal(t)) + " | " + (t.notes || "").replace(/\|/g, "\\|") + " |");
+        });
+    }
+    md.push("");
+    return md.join("\n");
+  }
+
+  function copyReport() {
+    const ta = $("#reportText");
+    const btn = document.querySelector('[data-action="copy-report"]');
+    const done = (ok) => { if (btn) { btn.textContent = ok ? "✅ Nukopijuota" : "⚠ Nepavyko"; setTimeout(() => (btn.textContent = "📋 Kopijuoti"), 1500); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ta.value).then(() => done(true)).catch(() => done(false));
+    } else {
+      ta.select(); ta.setSelectionRange(0, ta.value.length);
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  }
+
+  function openImport() {
+    $("#importText").value = "";
+    $("#importError").textContent = "";
+    $("#importOverride").checked = false;
+    $("#importModal").classList.add("open");
+    $("#importText").focus();
+  }
+
+  // Returns { ok: true, data } or { ok: false, error }
+  function validateImport(text) {
+    if (!text.trim()) return { ok: false, error: "Įklijuok JSON duomenis." };
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      return { ok: false, error: "Netaisyklingas JSON: " + e.message };
+    }
+    if (!Array.isArray(parsed)) return { ok: false, error: "JSON turi būti sąrašas ([...])." };
+
+    const clean = [];
+    for (let i = 0; i < parsed.length; i++) {
+      const t = parsed[i];
+      if (typeof t !== "object" || t === null) return { ok: false, error: `Įrašas #${i + 1}: turi būti objektas.` };
+      const symbol = String(t.symbol || "").trim().toUpperCase();
+      const shares = Number(t.shares);
+      const price = Number(t.price);
+      if (!symbol) return { ok: false, error: `Įrašas #${i + 1}: trūksta „symbol".` };
+      if (!(shares > 0)) return { ok: false, error: `Įrašas #${i + 1} (${symbol}): „shares" turi būti > 0.` };
+      if (!(price >= 0)) return { ok: false, error: `Įrašas #${i + 1} (${symbol}): „price" turi būti ≥ 0.` };
+      const currency = CURRENCIES.includes(String(t.currency || "").toUpperCase()) ? String(t.currency).toUpperCase() : "EUR";
+      const eurAmount = currency !== "EUR" && Number(t.eurAmount) > 0 ? Number(t.eurAmount) : (currency === "EUR" ? shares * price : null);
+      const fee = Number(t.fee) > 0 ? Number(t.fee) : 0;
+      clean.push({
+        id: t.id || uid(),
+        type: t.type === "sell" ? "sell" : "buy",
+        symbol,
+        currency,
+        shares,
+        price,
+        eurAmount,
+        fee,
+        date: t.date || new Date().toISOString().slice(0, 10),
+        notes: t.notes ? String(t.notes) : "",
+      });
+    }
+    return { ok: true, data: clean };
+  }
+
+  function doImport() {
+    const result = validateImport($("#importText").value);
+    if (!result.ok) {
+      $("#importError").textContent = result.error;
+      return;
+    }
+    const clean = result.data;
+    const override = $("#importOverride").checked;
+
+    if (override) {
+      // Perrašyti viską: paliekami tik naujai importuoti duomenys.
+      if (transactions.length > 0 &&
+          !confirm("Perrašyti viską?\n\nVisi " + transactions.length + " esami įrašai bus ištrinti ir pakeisti " + clean.length + " importuotais.")) {
+        return;
+      }
+      transactions = clean;
+    } else {
+      // Sujungti su esamais (pridedami tik nauji ID).
+      const existing = new Set(transactions.map((t) => t.id));
+      transactions.push(...clean.filter((t) => !existing.has(t.id)));
+    }
+    save();
+    render();
+    $("#importModal").classList.remove("open");
+    alert(override
+      ? "Perrašyta: dabar yra " + clean.length + " transakcijų."
+      : "Sujungta: importuota " + clean.length + " transakcijų.");
+  }
+
+  // ---------- Event delegation ----------
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+
+    switch (action) {
+      case "add": openModal(null); break;
+      case "close": closeAllModals(); break;
+      case "export": exportData(); break;
+      case "import": openImport(); break;
+      case "report": exportReport(); break;
+      case "refresh-chart": {
+        const sym = $("#chartSymbol").value;
+        if (sym) refreshPrices([sym], btn);
+        break;
+      }
+      case "refresh-fx": refreshFxRate(btn.dataset.cur, btn); break;
+      case "add-watch": addWatch(btn); break;
+      case "remove-watch": removeWatch(); break;
+      case "copy": copyExport(); break;
+      case "copy-report": copyReport(); break;
+      case "do-import": doImport(); break;
+      case "edit": {
+        const tx = transactions.find((t) => t.id === id);
+        if (tx) openModal(tx);
+        break;
+      }
+      case "delete": {
+        if (confirm("Ištrinti šią transakciją?")) {
+          transactions = transactions.filter((t) => t.id !== id);
+          save();
+          render();
+        }
+        break;
+      }
+    }
+  });
+
+  document.querySelectorAll(".modal-backdrop").forEach((m) => {
+    m.addEventListener("click", (e) => { if (e.target === m) m.classList.remove("open"); });
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAllModals(); });
+  $("#search").addEventListener("input", renderHistory);
+  $("#typeFilter").addEventListener("change", renderHistory);
+  $("#chartSymbol").addEventListener("change", renderChart);
+  $("#watchAdd").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addWatch(null); } });
+
+  // Live-convert a typed "." into "," in every numeric input, so the decimal separator is always a comma.
+  document.addEventListener("input", (e) => {
+    const el = e.target;
+    if (el.classList && el.classList.contains("num-input") && el.value.indexOf(".") !== -1) {
+      const start = el.selectionStart;
+      el.value = el.value.replace(/\./g, ",");
+      try { el.setSelectionRange(start, start); } catch (err) { /* ignore */ }
+    }
+  });
+
+  // Editable current-price inputs in the holdings table.
+  $("#holdings").addEventListener("change", (e) => {
+    const input = e.target.closest(".price-input");
+    if (!input) return;
+    const sym = input.dataset.price;
+    const val = parseNum(input.value);
+    if (val > 0) prices[sym] = val;
+    else delete prices[sym];
+    savePrices();
+    render();
+  });
+
+  // Manual FX-rate inputs.
+  $("#fxSection").addEventListener("change", (e) => {
+    const input = e.target.closest(".fx-input");
+    if (!input) return;
+    const cur = input.dataset.fx;
+    const val = parseNum(input.value);
+    if (val > 0) fxRates[cur] = val;
+    else delete fxRates[cur];
+    saveFx();
+    render();
+  });
+
+  // ---------- Startup ----------
+  async function init() {
+    try {
+      db = await openDB();
+      await migrateFromLocalStorage();
+      transactions = await dbGetAll();
+    } catch (e) {
+      console.error("Nepavyko atidaryti IndexedDB:", e);
+      alert("Nepavyko atidaryti duomenų bazės (IndexedDB): " + e.message + "\nDuomenys šioje sesijoje nebus išsaugoti.");
+    }
+    render();
+  }
+
+  init();
 })();
-
-// --- EXPORT ---
-function exportCSV(){
-const headers=['ID','Tipas','Simbolis','Kiekis','Kaina (USD)','Data','Valiuta','Pastabos'];
-let csv='﻿'+headers.join(',')+'\n';
-transactions.forEach(t=>{
-const row=[t.id,t.type,t.symbol,t.shares,t.price,t.date,t.currency||'USD','"'+(t.notes||'').replace(/"/g,'""')+'"'];
-csv+=row.join(',')+'\n';
-});
-downloadFile(csv,'stocks_portfolio.csv','text/csv;charset=utf-8');
-}
-
-function exportJSON(){
-const data={exportedAt:new Date().toISOString(),eurUsdRate,transactions};
-downloadFile(JSON.stringify(data,null,2),'stocks_portfolio.json','application/json');
-}
-
-function downloadFile(content,filename,mime){
-const blob=new Blob([content],{type:mime});
-const url=URL.createObjectURL(blob);
-const a=document.createElement('a');a.href=url;a.download=filename;a.click();
-URL.revokeObjectURL(url);
-}
-
-function clearAllData(){
-if(!confirm('Ar tikrai norite išvalyti VISUS duomenis? Šis veiksmas negrįžtamas!'))return;
-if(confirm('Paskutinis perspėjimas: visos transakcijos bus ištrintos!')){
-localStorage.removeItem(STORAGE_KEY);
-transactions=[];
-pricesCache={};
-renderDashboard();
-renderTransactions();
-showToast('📭 Visi duomenys išvalyti','info');
-}
-}
-
-// --- TOAST ---
-function showToast(msg,type){
-const existing=document.querySelector('.toast');
-if(existing)existing.remove();
-const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
-document.body.appendChild(t);
-setTimeout(()=>t.remove(),3000);
-}
 </script>
 </body>
 </html>
