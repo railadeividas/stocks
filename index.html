@@ -458,8 +458,8 @@ html+='<tr><td>'+t.date+'</td>'
 +'<td class="text-right">'+fmt(total)+'</td>'
 +'<td class="text-muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(t.notes||'—')+'</td>'
 +'<td><div class="edit-btns">'
-+'<button class="edit-btn" onclick="openModal(''+t.type+'','+JSON.stringify(t)+')" title="Redaguoti">✏️</button>'
-+'<button class="del-btn" onclick="deleteTx(''+t.id+'')" title="Ištrinti">🗑️</button>'
++'<button class="edit-btn" onclick="openModal(\''+t.type+'\','+JSON.stringify(t)+')" title="Redaguoti">✏️</button>'
++'<button class="del-btn" onclick="deleteTx(\''+t.id+'\')" title="Ištrinti">🗑️</button>'
 +'</div></td></tr>';
 });
 html+='</tbody></table>';
