@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akcijų Portfelis 📈</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--radius:8px;--shadow:0 1px 3px rgba(0,0,0,.3)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.container{max-width:1100px;margin:0 auto;padding:16px}
+header{background:var(--card);border-bottom:1px solid var(--border);padding:12px 0;position:sticky;top:0;z-index:100}
+header .container{display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+header h1{font-size:20px;font-weight:600}
+header h1 span{color:var(--accent)}
+header nav{display:flex;gap:4px}
+header nav button{background:none;border:none;color:var(--muted);padding:6px 14px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-weight:500;transition:.2s}
+header nav button:hover{color:var(--text);background:rgba(255,255,255,.05)}
+header nav button.active{color:var(--accent);background:rgba(88,166,255,.12)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.card h2{font-size:16px;font-weight:600;margin-bottom:16px;color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.stat .val{font-size:24px;font-weight:700;margin-top:4px}
+.stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.stat .val.green{color:var(--green)}
+.stat .val.red{color:var(--red)}
+.stat .val.accent{color:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:rgba(255,255,255,.03)}
+th{padding:10px 12px;text-align:left;color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
+tr:hover td{background:rgba(255,255,255,.02)}
+form{display:grid;gap:12px}
+.form-row{display:grid;gap:6px}
+.form-row label{font-size:12px;color:var(--muted);font-weight:500}
+input,select,textarea{padding:8px 12px;background:#0d1117;border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;outline:none;transition:.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(88,166,255,.15)}
+textarea{resize:vertical;min-height:60px;font-family:inherit}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;transition:.2s;text-decoration:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#4a90d9}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{background:#d93a3a}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{background:#2ea043}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--text)}
+.btn-sm{padding:4px 10px;font-size:11px}
+.flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.flex-between{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.hidden{display:none !important}
+.badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge-buy{background:rgba(63,185,80,.15);color:var(--green)}
+.badge-sell{background:rgba(248,81,73,.15);color:var(--red)}
+.text-green{color:var(--green)}
+.text-red{color:var(--red)}
+.text-muted{color:var(--muted)}
+.text-right{text-align:right}
+.mt-12{margin-top:12px}
+.mb-12{margin-bottom:12px}
+.gap-12{gap:12px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-state p{font-size:14px;margin-bottom:12px}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
+.modal h2{font-size:18px;margin-bottom:16px}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.form-2col{grid-template-columns:1fr}}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;border-radius:2px;transition:width .4s}
+canvas{max-width:100%;height:auto!important}
+.symbol-badge{display:inline-block;background:rgba(88,166,255,.1);color:var(--accent);padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;font-family:monospace}
+.toast{position:fixed;bottom:24px;right:24px;z-index:300;padding:12px 20px;border-radius:8px;color:#fff;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.4);animation:slideIn .3s;max-width:360px}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+.toast.info{background:var(--accent)}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.tabs button{padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;font-size:13px;transition:.2s}
+.tabs button:hover{color:var(--text)}
+.tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
+.edit-btns{display:flex;gap:4px}
+.edit-btns button{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:4px;font-size:14px;transition:.2s;line-height:1}
+.edit-btns button:hover{background:rgba(255,255,255,.08)}
+.edit-btns .edit-btn:hover{color:var(--accent)}
+.edit-btns .del-btn:hover{color:var(--red)}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+<h1><span>📈</span> Akcijų Portfelis</h1>
+<nav>
+<button class="active" data-view="dashboard">🖥 Suvestinė</button>
+<button data-view="transactions">📋 Transakcijos</button>
+<button data-view="export">💾 Eksportas</button>
+</nav>
+</div>
+</header>
+
+<div class="container" id="app">
+
+<!-- DASHBOARD VIEW -->
+<div id="view-dashboard" class="view">
+<div class="grid" id="stats-grid">
+<div class="stat"><div class="label">Investuota</div><div class="val accent" id="stat-invested">€0.00</div></div>
+<div class="stat"><div class="label">Portfelio vertė</div><div class="val accent" id="stat-value">€0.00</div></div>
+<div class="stat"><div class="label">Pelnas / Nuostolis</div><div class="val" id="stat-pl">€0.00</div></div>
+<div class="stat"><div class="label">Akcijų skaičius</div><div class="val accent" id="stat-holdings">0</div></div>
+</div>
+
+<div class="card">
+<div class="flex-between mb-12">
+<h2>📊 Mano akcijos</h2>
+<div class="flex">
+<button class="btn btn-primary btn-sm" onclick="openModal('buy')">+ Pridėti pirkimą</button>
+<button class="btn btn-success btn-sm" onclick="openModal('sell')">+ Pridėti pardavimą</button>
+<button class="btn btn-ghost btn-sm" onclick="refreshPrices()">🔄 Atnaujinti kainas</button>
+</div>
+</div>
+<div id="price-status" class="text-muted" style="font-size:12px;margin-bottom:8px;"></div>
+<div id="holdings-table"><div class="empty-state"><p>📭 Dar nėra jokių transakcijų</p><button class="btn btn-primary btn-sm" onclick="openModal('buy')">Pridėti pirmą pirkimą</button></div></div>
+</div>
+
+<div class="card" id="portfolio-chart-card">
+<h2>📈 Portfelio struktūra</h2>
+<canvas id="portfolio-chart" height="250"></canvas>
+</div>
+</div>
+
+<!-- TRANSACTIONS VIEW -->
+<div id="view-transactions" class="view hidden">
+<div class="card">
+<div class="flex-between mb-12">
+<h2>📋 Transakcijų istorija</h2>
+<div class="flex">
+<input type="text" id="tx-search" placeholder="🔍 Ieškoti..." style="width:180px" oninput="renderTransactions()">
+<select id="tx-filter" onchange="renderTransactions()" style="width:120px">
+<option value="all">Visos</option>
+<option value="buy">Pirkimai</option>
+<option value="sell">Pardavimai</option>
+</select>
+</div>
+</div>
+<div id="transactions-list"><div class="empty-state"><p>📭 Nėra transakcijų</p></div></div>
+</div>
+</div>
+
+<!-- EXPORT VIEW -->
+<div id="view-export" class="view hidden">
+<div class="card">
+<h2>💾 Duomenų eksportas</h2>
+<p class="text-muted" style="font-size:13px;margin-bottom:16px">Atsisiųskite savo duomenis CSV arba JSON formatu. Taip pat galite išvalyti visus duomenis.</p>
+<div class="flex gap-12">
+<button class="btn btn-primary" onclick="exportCSV()">📥 Atsisiųsti CSV</button>
+<button class="btn btn-ghost" onclick="exportJSON()">📥 Atsisiųsti JSON</button>
+<button class="btn btn-danger" onclick="clearAllData()">🗑 Išvalyti visus duomenis</button>
+</div>
+</div>
+<div class="card">
+<h2>ℹ️ Apie</h2>
+<p class="text-muted" style="font-size:13px">Duomenys saugomi tik šioje naršyklėje (localStorage). Kainos atnaujinamos iš Yahoo Finance. Valiutų kursai iš ExchangeRate-API.</p>
+</div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="if(event.target===this)closeModal()">
+<div class="modal" onclick="event.stopPropagation()">
+<h2 id="modal-title">Pridėti pirkimą</h2>
+<form id="modal-form" onsubmit="handleFormSubmit(event)">
+<input type="hidden" id="edit-id">
+<div class="form-2col">
+<div class="form-row">
+<label for="tx-type">Tipas</label>
+<select id="tx-type" onchange="updateModalTitle()">
+<option value="buy">Pirkimas</option>
+<option value="sell">Pardavimas</option>
+</select>
+</div>
+<div class="form-row">
+<label for="tx-symbol">Simbolis (pvz. AAPL)</label>
+<input id="tx-symbol" placeholder="PVZ: AAPL" required pattern="[A-Za-z0-9.]{1,10}">
+</div>
+</div>
+<div class="form-2col">
+<div class="form-row">
+<label for="tx-shares">Kiekis (vnt.)</label>
+<input id="tx-shares" type="number" step="any" min="0.00001" placeholder="10" required>
+</div>
+<div class="form-row">
+<label for="tx-price">Kaina už vnt. (USD)</label>
+<input id="tx-price" type="number" step="any" min="0.00001" placeholder="150.00" required>
+</div>
+</div>
+<div class="form-2col">
+<div class="form-row">
+<label for="tx-date">Data</label>
+<input id="tx-date" type="date" required>
+</div>
+<div class="form-row">
+<label for="tx-currency">Valiuta</label>
+<select id="tx-currency">
+<option value="USD">USD</option>
+<option value="EUR">EUR</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<label for="tx-notes">Pastabos</label>
+<textarea id="tx-notes" placeholder="Neprivaloma..."></textarea>
+</div>
+<div class="flex flex-between mt-12">
+<button type="button" class="btn btn-ghost" onclick="closeModal()">Atšaukti</button>
+<button type="submit" class="btn btn-primary" id="modal-submit">💾 Išsaugoti</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+const STORAGE_KEY = 'stocks_portfolio_tx';
+let transactions = [];
+let pricesCache = {};
+let eurUsdRate = null;
+
+function loadData(){
+try{
+const d=localStorage.getItem(STORAGE_KEY);
+transactions=d?JSON.parse(d):[];
+}catch(e){transactions=[]}
+}
+function saveData(){
+localStorage.setItem(STORAGE_KEY,JSON.stringify(transactions));
+}
+loadData();
+
+// --- NAV ---
+document.querySelectorAll('header nav button').forEach(btn=>{
+btn.addEventListener('click',()=>{
+document.querySelectorAll('header nav button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
+document.getElementById('view-'+btn.dataset.view).classList.remove('hidden');
+if(btn.dataset.view==='dashboard')renderDashboard();
+if(btn.dataset.view==='transactions')renderTransactions();
+});
+});
+
+// --- MODALS ---
+function openModal(type,editTx){
+document.getElementById('modal-overlay').classList.remove('hidden');
+document.getElementById('edit-id').value=editTx?editTx.id:'';
+document.getElementById('tx-type').value=type||'buy';
+document.getElementById('tx-symbol').value=editTx?editTx.symbol:'';
+document.getElementById('tx-shares').value=editTx?editTx.shares:'';
+document.getElementById('tx-price').value=editTx?editTx.price:'';
+document.getElementById('tx-date').value=editTx?editTx.date:new Date().toISOString().slice(0,10);
+document.getElementById('tx-currency').value=editTx?editTx.currency||'USD':'USD';
+document.getElementById('tx-notes').value=editTx?editTx.notes||'':'';
+document.getElementById('modal-submit').textContent=editTx?'💾 Atnaujinti':'💾 Išsaugoti';
+updateModalTitle();
+}
+function closeModal(){
+document.getElementById('modal-overlay').classList.add('hidden');
+}
+function updateModalTitle(){
+const type=document.getElementById('tx-type').value;
+const editId=document.getElementById('edit-id').value;
+const prefix=editId?'Redaguoti':'Pridėti';
+document.getElementById('modal-title').textContent=prefix+' '+(type==='buy'?'pirkimą':'pardavimą');
+}
+
+function handleFormSubmit(e){
+e.preventDefault();
+const id=document.getElementById('edit-id').value;
+const type=document.getElementById('tx-type').value;
+const symbol=document.getElementById('tx-symbol').value.toUpperCase().trim();
+const shares=parseFloat(document.getElementById('tx-shares').value);
+const price=parseFloat(document.getElementById('tx-price').value);
+const date=document.getElementById('tx-date').value;
+const currency=document.getElementById('tx-currency').value;
+const notes=document.getElementById('tx-notes').value.trim();
+
+if(id){
+const idx=transactions.findIndex(t=>t.id===id);
+if(idx>=0)transactions[idx]={...transactions[idx],type,symbol,shares,price,date,currency,notes};
+} else {
+transactions.push({ id:crypto.randomUUID(), type, symbol, shares, price, date, currency, notes, createdAt:new Date().toISOString() });
+}
+saveData();
+closeModal();
+showToast(id?'Transakcija atnaujinta!':'Transakcija pridėta!','success');
+renderDashboard();
+renderTransactions();
+}
+
+// --- CALCULATIONS ---
+function calcPortfolio(){
+const stocks={};
+const bySymbol={};
+transactions.forEach(t=>{
+const sym=t.symbol.toUpperCase();
+if(!bySymbol[sym])bySymbol[sym]=[];
+bySymbol[sym].push(t);
+});
+
+Object.entries(bySymbol).forEach(([sym,txs])=>{
+let totalBought=0,totalCost=0,totalSold=0,totalRevenue=0;
+let latestPrice=pricesCache[sym];
+txs.forEach(t=>{
+const cost=Convert(t.price,t.currency||'USD')*t.shares;
+if(t.type==='buy'){totalBought+=t.shares;totalCost+=cost;}
+else{totalSold+=t.shares;totalRevenue+=cost;}
+});
+const remaining=totalBought-totalSold;
+const avgCost=totalBought>0?totalCost/totalBought:0;
+const realizedPL=totalRevenue-(avgCost*totalSold);
+const currentValue=remaining>0?(latestPrice?Convert(latestPrice,'USD')*remaining:0):0;
+const unrealizedPL=currentValue-(avgCost*remaining);
+stocks[sym]={sym,sharesBought:totalBought,costBasis:totalCost,sharesSold:totalSold,revenue:totalRevenue,remaining,avgCost,realizedPL,currentValue,unrealizedPL,latestPrice,transactions:txs};
+});
+return stocks;
+}
+
+function Convert(amount,from){
+if(from==='EUR')return amount/(eurUsdRate||0.96);
+return amount;
+}
+function ConvertFrom(amount,to){
+if(to==='EUR')return amount*(eurUsdRate||0.96);
+return amount;
+}
+function fmt(n){
+if(n==null||isNaN(n))return '€0.00';
+return (n>=0?'€':'−€')+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+}
+function fmtNum(n){
+if(n==null)return'0';
+return n.toLocaleString('lt-LT',{maximumFractionDigits:2});
+}
+
+// --- DASHBOARD ---
+async function renderDashboard(){
+const stocks=calcPortfolio();
+const totalInvested=Object.values(stocks).reduce((s,st)=>s+st.costBasis,0);
+const totalRevenue=Object.values(stocks).reduce((s,st)=>s+st.revenue,0);
+const totalValue=Object.values(stocks).reduce((s,st)=>s+st.currentValue,0);
+const totalPL=totalRevenue+totalValue-totalInvested;
+const totalRemaining=Object.values(stocks).reduce((s,st)=>s+st.remaining,0);
+
+document.getElementById('stat-invested').textContent=fmt(totalInvested);
+document.getElementById('stat-value').textContent=fmt(totalValue);
+const plEl=document.getElementById('stat-pl');
+plEl.textContent=fmt(totalPL);
+plEl.className='val '+(totalPL>=0?'green':'red');
+document.getElementById('stat-holdings').textContent=fmtNum(totalRemaining)+' vnt.';
+
+// Holdings table
+const tbody=document.getElementById('holdings-table');
+const active=Object.values(stocks).filter(s=>s.remaining>0);
+if(active.length===0&&transactions.length===0){
+tbody.innerHTML='<div class="empty-state"><p>📭 Dar nėra jokių transakcijų</p><button class="btn btn-primary btn-sm" onclick="openModal('buy')">Pridėti pirmą pirkimą</button></div>';
+return;
+}
+if(active.length===0){
+tbody.innerHTML='<div class="empty-state"><p>📭 Visos akcijos parduotos</p><button class="btn btn-primary btn-sm" onclick="openModal('buy')">Pridėti naują pirkimą</button></div>';
+return;
+}
+let html='<table><thead><tr><th>Simbolis</th><th class="text-right">Turiu</th><th class="text-right">Vid. kaina</th><th class="text-right">Dabartinė</th><th class="text-right">Vertė</th><th class="text-right">Pelnas</th><th class="text-right">Pokytis</th></tr></thead><tbody>';
+active.forEach(s=>{
+const priceDisplay=s.latestPrice!=null?Convert(s.latestPrice,'USD').toFixed(2)+'€':'—';
+const changePct=s.avgCost>0&&s.latestPrice!=null?((Convert(s.latestPrice,'USD')-s.avgCost)/s.avgCost*100):0;
+const changeClass=changePct>=0?'text-green':'text-red';
+const plClass=s.unrealizedPL>=0?'text-green':'text-red';
+html+='<tr><td><span class="symbol-badge">'+s.sym+'</span></td>'
++'<td class="text-right">'+fmtNum(s.remaining)+'</td>'
++'<td class="text-right">'+fmt(s.avgCost)+'</td>'
++'<td class="text-right">'+priceDisplay+'</td>'
++'<td class="text-right">'+fmt(s.currentValue)+'</td>'
++'<td class="text-right '+plClass+'">'+fmt(s.unrealizedPL)+'</td>'
++'<td class="text-right '+changeClass+'">'+(changePct!==0?(changePct>=0?'+':'')+changePct.toFixed(1)+'%':'—')+'</td></tr>';
+});
+html+='</tbody></table>';
+tbody.innerHTML=html;
+
+drawChart(active);
+}
+
+function drawChart(stocks){
+const canvas=document.getElementById('portfolio-chart');
+if(!canvas)return;
+const ctx=canvas.getContext('2d');
+const rect=canvas.parentElement.getBoundingClientRect();
+canvas.width=Math.min(rect.width-40,800);
+canvas.height=250;
+const w=canvas.width,h=canvas.height;
+ctx.clearRect(0,0,w,h);
+
+const active=stocks.filter(s=>s.currentValue>0);
+if(active.length===0){
+ctx.fillStyle='#8b949e';ctx.font='14px sans-serif';ctx.textAlign='center';
+ctx.fillText('Nėra duomenų portfelio struktūrai',w/2,h/2);
+return;
+}
+const total=active.reduce((s,st)=>s+st.currentValue,0);
+const colors=['#58a6ff','#3fb950','#d29922','#f85149','#bc8cff','#79c0ff','#56d364','#e3b341','#ff7b72','#d2a8ff'];
+const cx=w/2,cy=h/2+10,r=Math.min(w,h)/2-30;
+let startAngle=-Math.PI/2;
+active.forEach((s,i)=>{
+const pct=s.currentValue/total;
+const endAngle=startAngle+pct*2*Math.PI;
+ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,startAngle,endAngle);ctx.closePath();
+ctx.fillStyle=colors[i%colors.length];ctx.fill();
+startAngle=endAngle;
+});
+// Legend
+const legendY=h-20;
+let lx=20;
+ctx.font='11px sans-serif';
+active.forEach((s,i)=>{
+const pct=(s.currentValue/total*100).toFixed(1);
+const label=s.sym+' '+pct+'%';
+ctx.fillStyle=colors[i%colors.length];ctx.fillRect(lx,legendY-8,10,10);
+ctx.fillStyle='#e6edf3';ctx.textAlign='left';
+ctx.fillText(label,lx+14,legendY+2);
+lx+=ctx.measureText(label).width+24;
+});
+}
+
+// --- TRANSACTIONS ---
+function renderTransactions(){
+const search=document.getElementById('tx-search').value.toLowerCase();
+const filter=document.getElementById('tx-filter').value;
+let list=[...transactions];
+if(filter!=='all')list=list.filter(t=>t.type===filter);
+if(search)list=list.filter(t=>t.symbol.toLowerCase().includes(search)||(t.notes||'').toLowerCase().includes(search));
+list.sort((a,b)=>b.date.localeCompare(a.date)||(b.createdAt||b.date).localeCompare(a.createdAt||a.date));
+
+const el=document.getElementById('transactions-list');
+if(list.length===0){
+el.innerHTML='<div class="empty-state"><p>📭 Transakcijų nerasta</p></div>';
+return;
+}
+let html='<table><thead><tr><th>Data</th><th>Tipas</th><th>Simbolis</th><th class="text-right">Kiekis</th><th class="text-right">Kaina</th><th class="text-right">Suma</th><th>Pastabos</th><th></th></tr></thead><tbody>';
+list.forEach(t=>{
+const total=Convert(t.price,t.currency||'USD')*t.shares;
+const badgeClass=t.type==='buy'?'badge-buy':'badge-sell';
+const badgeText=t.type==='buy'?'PIRKIMAS':'PARDAVIMAS';
+html+='<tr><td>'+t.date+'</td>'
++'<td><span class="badge '+badgeClass+'">'+badgeText+'</span></td>'
++'<td><span class="symbol-badge">'+t.symbol+'</span></td>'
++'<td class="text-right">'+fmtNum(t.shares)+'</td>'
++'<td class="text-right">'+t.price.toFixed(2)+'$</td>'
++'<td class="text-right">'+fmt(total)+'</td>'
++'<td class="text-muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(t.notes||'—')+'</td>'
++'<td><div class="edit-btns">'
++'<button class="edit-btn" onclick="openModal(''+t.type+'','+JSON.stringify(t)+')" title="Redaguoti">✏️</button>'
++'<button class="del-btn" onclick="deleteTx(''+t.id+'')" title="Ištrinti">🗑️</button>'
++'</div></td></tr>';
+});
+html+='</tbody></table>';
+el.innerHTML=html;
+}
+
+function deleteTx(id){
+if(!confirm('Ar tikrai norite ištrinti šią transakciją?'))return;
+transactions=transactions.filter(t=>t.id!==id);
+saveData();
+renderTransactions();
+renderDashboard();
+showToast('Transakcija ištrinta!','info');
+}
+
+// --- PRICES ---
+async function refreshPrices(){
+const status=document.getElementById('price-status');
+status.textContent='🔄 Atnaujinamos kainos...';
+const symbols=[...new Set(transactions.map(t=>t.symbol.toUpperCase()))];
+if(symbols.length===0){status.textContent='';return;}
+let count=0;
+const batchSize=5;
+for(let i=0;i<symbols.length;i+=batchSize){
+const batch=symbols.slice(i,i+batchSize);
+await Promise.all(batch.map(async(sym)=>{
+try{
+const resp=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/'+sym+'?interval=1d&range=5d');
+const data=await resp.json();
+const prices=data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close||[];
+const valid=prices.filter(p=>p!=null);
+if(valid.length>0){
+pricesCache[sym]=valid[valid.length-1];
+count++;
+}
+}catch(e){/* ignore */}
+}));
+await new Promise(r=>setTimeout(r,800));
+}
+status.textContent='✅ Atnaujintos '+count+'/'+symbols.length+' kainos';
+setTimeout(()=>status.textContent='',4000);
+renderDashboard();
+}
+
+// --- EUR/USD RATE ---
+async function fetchEurUsdRate(){
+try{
+const r=await fetch('https://open.er-api.com/v6/latest/USD');
+const d=await r.json();
+if(d.rates?.EUR)eurUsdRate=d.rates.EUR;
+}catch(e){eurUsdRate=0.96}
+}
+// Init
+(async()=>{
+await fetchEurUsdRate();
+await refreshPrices();
+renderDashboard();
+renderTransactions();
+})();
+
+// --- EXPORT ---
+function exportCSV(){
+const headers=['ID','Tipas','Simbolis','Kiekis','Kaina (USD)','Data','Valiuta','Pastabos'];
+let csv='﻿'+headers.join(',')+'\n';
+transactions.forEach(t=>{
+const row=[t.id,t.type,t.symbol,t.shares,t.price,t.date,t.currency||'USD','"'+(t.notes||'').replace(/"/g,'""')+'"'];
+csv+=row.join(',')+'\n';
+});
+downloadFile(csv,'stocks_portfolio.csv','text/csv;charset=utf-8');
+}
+
+function exportJSON(){
+const data={exportedAt:new Date().toISOString(),eurUsdRate,transactions};
+downloadFile(JSON.stringify(data,null,2),'stocks_portfolio.json','application/json');
+}
+
+function downloadFile(content,filename,mime){
+const blob=new Blob([content],{type:mime});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');a.href=url;a.download=filename;a.click();
+URL.revokeObjectURL(url);
+}
+
+function clearAllData(){
+if(!confirm('Ar tikrai norite išvalyti VISUS duomenis? Šis veiksmas negrįžtamas!'))return;
+if(!confirm('Paskutinis perspėjimas: visos transakcijos bus ištrintos!')){
+localStorage.removeItem(STORAGE_KEY);
+transactions=[];
+pricesCache={};
+renderDashboard();
+renderTransactions();
+showToast('📭 Visi duomenys išvalyti','info');
+}
+}
+
+// --- TOAST ---
+function showToast(msg,type){
+const existing=document.querySelector('.toast');
+if(existing)existing.remove();
+const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
+document.body.appendChild(t);
+setTimeout(()=>t.remove(),3000);
+}
+</script>
+</body>
+</html>
