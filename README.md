@@ -31,22 +31,29 @@ Asmeninis akcijų portfelio sekimo įrankis. Statinė vieno failo (`index.html`)
 3. „Kainos ir grafikas" sekcijoje pasirink akciją ir spausk **Atnaujinti grafiką** — paims kainą ir grafiko duomenis iš Yahoo (kaina automatiškai atsiras ir turimų pozicijų lentelėje). Kainą taip pat gali įvesti rankiniu būdu lentelėje. Norėdamas žiūrėti akciją, kurios neturi — įrašyk simbolį į **„Stebėti simbolį"** ir spausk „Pridėti į sąrašą" (pašalinti — mygtuku „Pašalinti iš sąrašo")
 4. Arba turimų pozicijų lentelėje įvesk **dabartinę kainą** rankiniu būdu → iškart matysi neralizuotą pelną/nuostolį, rinkos vertę ir portfelio dalį
 5. Stebėk suvestinę, turimas pozicijas ir realizuotus sandorius viršuje
-6. **⬇ Eksportuoti** — parodo visų duomenų pretty JSON; paspausk „Kopijuoti" ir išsaugok (atsarginė kopija)
-7. **⬆ Importuoti** — įklijuok JSON į laukelį ir spausk „Importuoti"; jei formatas klaidingas, matysi klaidos pranešimą.
+6. **⬇ Eksportuoti** — parodo transakcijų pretty JSON; paspausk „Kopijuoti" ir išsaugok (atsarginė kopija).
+   - Pažymėjus **„Įtraukti simbolių duomenis"** — pridedama kainų istorija, stebimi simboliai ir dabartinės kainos
+   - Pažymėjus **„Įtraukti valiutų duomenis"** — pridedama kursų istorija ir dabartiniai kursai
+   - Be varnelių eksportas lieka paprastas transakcijų sąrašas (suderinamas su senesnėmis versijomis)
+7. **⬆ Importuoti** — įklijuok JSON į laukelį ir spausk „Importuoti"; kainų/valiutų duomenys aptinkami automatiškai.
    - Nepažymėjus **„Perrašyti viską (override)"** — importuoti duomenys **sujungiami** su esamais (pridedami tik nauji įrašai)
-   - Pažymėjus **override** — visi esami duomenys ištrinami ir paliekami **tik importuoti**
+   - Pažymėjus **override** — esamos transakcijos pakeičiamos importuotomis; kainų/kursų istorija visada **sujungiama**
 8. **📝 Ataskaita** — sugeneruoja statistikos ataskaitą Markdown formatu
 
 ## Duomenų saugojimas
 
-Transakcijos saugomos naršyklės **IndexedDB** duomenų bazėje (`stocks_portfolio`,
-object store `transactions`). Įvestos dabartinės kainos kol kas saugomos `localStorage`
-(`stocks_prices_v1`) — jas planuojama perkelti į IndexedDB kitame atnaujinime.
+Visi duomenys saugomi naršyklės **IndexedDB** duomenų bazėje (`stocks_portfolio`):
+- `transactions` — transakcijos.
+- `kv` — įvestos kainos, valiutų kursai, kainų/grafikų kešas, stebimų simbolių sąrašas, grafiko laikotarpis.
+- `priceHistory` — dienos akcijų kainų istorija (`{ symbol, date, close, currency }`), atsiunčiama iš Yahoo.
+- `fxHistory` — dienos valiutų kursų istorija (`{ currency, date, rate }`).
 
-> Jei anksčiau naudojai versiją su `localStorage`, transakcijos automatiškai perkeliamos
+Kainų ir kursų istorija pildoma paspaudus **„Atnaujinti visas kainas"** (užpildo dienos duomenis
+nuo seniausios transakcijos iki šiandien). Iš jos sudaromi ilgo laikotarpio grafikai ir **portfelio
+vertės laike** grafikas (skaičiuojamas iš istorijos + transakcijų).
+
+> Jei anksčiau naudojai versiją su `localStorage`, duomenys automatiškai perkeliami
 > į IndexedDB pirmą kartą atidarius naują versiją.
-
-Atnaujintos kainos ir grafiko duomenys keše saugomi `localStorage` (`stocks_quotes_v1`).
 
 Duomenys neišeina iš tavo įrenginio ir nesiunčiami niekur. Kad neprarastum jų valydamas
 naršyklės duomenis ar keisdamas įrenginį — reguliariai naudok **Eksportuoti**.
@@ -96,7 +103,7 @@ Portfelis skaičiuojamas viena **EUR baze**, bet akcijos gali būti kitos valiut
 
 > EUR akcijoms (pvz. BMW) nieko keisti nereikia — valiuta lieka EUR, jokio kurso.
 
-Kursai saugomi `localStorage` (`stocks_fx_v1`).
+Kursai saugomi IndexedDB (`kv` store).
 
 ## Paleidimas lokaliai
 
